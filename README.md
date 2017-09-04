@@ -1,6 +1,9 @@
 leaflet-blurred-location-display
 ====
 
+[![Build Status](https://travis-ci.org/publiclab/leaflet-blurred-location-display.svg)](https://travis-ci.org/publiclab/leaflet-blurred-location-display)
+
+
 
 **This is a working draft; the project will be working towards an initial v0.0.1 release in coming weeks**
 
