@@ -1,8 +1,17 @@
 BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
+  options = options || {};
   options.currPrecision = options.currPrecision || 2;
   options.list = options.list || [[35.3, 39.2, "Popup Text"],[35.3554, 39.2623, "Popup Text"]];
   options.currBoxUpperLeft = options.currBoxUpperLeft || [35.35, 39.26];
+
+  options.Interface = options.Interface || require('./ui/Interface.js');
+  options.blurredLocation = options.blurredLocation || {};
+
+  var InterfaceOptions = options.InterfaceOptions || {};
+  InterfaceOptions.blurredLocation = options.blurredLocation;
+  var Interface = options.Interface(InterfaceOptions);
+
 
 
   function getBlurredLocations() {
@@ -33,5 +42,8 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   return {
     getBlurredLocations: getBlurredLocations,
     showPopUp: showPopUp,
+    Interface: Interface,
   }
 }
+
+exports.BlurredLocationDisplay = BlurredLocationDisplay;
