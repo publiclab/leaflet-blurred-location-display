@@ -6,11 +6,11 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
     <script src="../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="../node_modules/map_module/dist/Leaflet.BlurredLocation.js"></script>
+    <link href="../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
     <script src="../node_modules/leaflet/dist/leaflet.js"></script>
+    <script src="../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
     <script src="../dist/Leaflet.BlurredLocationDisplay.js"></script>
 
   </head>
@@ -19,31 +19,14 @@
 
     <div class="container" >
 
-      <h1>Leaflet BlurredLocation <small>| by <a href="">Public Lab</a></small></h1>
+      <h1>Leaflet BlurredLocationDisplay <small>| by <a href="">Public Lab</a></small></h1>
 
-      <p>This library is designed to allow locations to be input but with a degree of "blur" -- obscuring exact location in cases where some privacy is needed. Locations are represented as latitude and longitude, but truncated to a precision as indicated by the highlighted region on the map shown. <a href="https://github.com/publiclab/leaflet-blurred-location">Leaflet.BlurredLocation</a> is open source, and was created as part of a <a href="http://summerofcode.withgoogle.com">Google Summer of Code project</a> by <a href="https://github.com/mridulnagpal">Mridul Nagpal</a>.</p>
-
-      <hr />
-
-      <h3>Enter a location</h3>
-
-      <label>
-        <input id="browserLocation" type="checkbox" checked onchange='blurredLocation.geocodeWithBrowser(document.getElementById("browserLocation").checked);'>
-        Get my location
-      </label>
-      <br/>
-      <label>
-        <input id="obscureLocation" type="checkbox" checked onchange='blurredLocation.setBlurred(document.getElementById("obscureLocation").checked);'>
-        Blur my location
-      </label>
+      <p>This library is designed to allow locations to be displayed but with a degree of "blur" -- obscuring exact location in cases where some privacy is needed. Locations are represented as latitude and longitude, but truncated to a precision as indicated by the highlighted region on the map shown. <a href="https://github.com/publiclab/leaflet-blurred-location-display">Leaflet.BlurredLocationDisplay</a> is open source, and was created as part of a <a href="http://summerofcode.withgoogle.com">Google Summer of Code project</a> by <a href="https://github.com/mridulnagpal">Mridul Nagpal</a>.</p>
 
       <hr />
-
-      <p><b>By place name</b></p>
-      <p><input id="placenameInput" type="text" class="form-control" /></p>
 
       <p>
-        <b>By entering co-ordinates</b>
+        <h4><b>By entering co-ordinates</b></h4>
         <div class="row">
           <div class="col-md-6">
             <p><input id="lat" type="text" class="form-control" placeholder="Latitude"></p>
@@ -53,8 +36,6 @@
           </div>
         </div>
       </p>
-
-      <p><b>By dragging the map</b></p>
 
       <div id="map" class="leaflet-map" style="width: 100%; height: 400px;"></div>
 
@@ -70,12 +51,15 @@
           lngId: 'lng'
         }
       }
-      var blurredLocation = new BlurredLocation(options);
-      blurredLocation.panMapToGeocodedLocation("placenameInput");
 
-      options = []
 
-      var blurredLocationDisplay = new BlurredLocationDisplay(options);
+      var BlurredLocation = new BlurredLocation(options);
+
+      var options_display = {
+        blurredLocation: BlurredLocation,
+      }
+
+      var blurredLocationDisplay = new BlurredLocationDisplay(options_display);
 
     </script>
 
