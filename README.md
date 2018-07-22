@@ -1,6 +1,9 @@
 leaflet-blurred-location-display
 ====
 
+[![Build Status](https://travis-ci.org/publiclab/leaflet-blurred-location-display.svg)](https://travis-ci.org/publiclab/leaflet-blurred-location-display)
+
+
 
 **This is a working draft; the project will be working towards an initial v0.0.1 release in coming weeks**
 
@@ -30,3 +33,11 @@ To set up the library first clone this repo to your local after that run 'npm in
 |-----------------|--------------------|----------------|
 |`getBlurredLocations()`       | Used to get the locations fit to display according to given map parameters.|  `blurredLocationDisplay.getBlurredLocations() //This would return the list of all locations fit to display`|
 |`showPopUp()`       | Used to show a pop up for all the locations fit to be displayed. The pop up text will be mentioned in the input itself|`blurredLocationDisplay.showPopUp() //This would show pop ups of all locations fit to display`|
+
+
+## Features
+
+| Feature         | Use                                                        |
+|-----------------|------------------------------------------------------------|
+| **'Blurred' location display** | Your exact location won't be posted, only the grid square it falls within will be shown till the level of precision you have set to your location.|
+| **'Blurred' human-readable location display** | The name of the location you added will be displayed till the level of precision you set as the extent of address depends on the precision level you currently are on. For instance for precision 0 only the country name will be provided as you zoom in precision will increase and so will the address details, such as state, city, etc. |
