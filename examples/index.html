@@ -61,6 +61,22 @@
 
       var blurredLocationDisplay = new BlurredLocationDisplay(options_display);
 
+      var markers = {
+        marker_1: [1.5, 10.7],
+        marker_2: [2.5, 9.7],
+        marker_3: [4.7, 13.7],
+        marker_4: [0.4, 7.7],
+        marker_5: [-0.5, 5.7],
+        marker_6: [-3.2, 14.4],
+        marker_7: [-5.6, 15.7],
+        marker_8: [-0.6, 20.6],
+      }
+
+      for(marker in markers) {
+        L.marker([markers[marker][0], markers[marker][1]]).addTo(BlurredLocation.map);
+      }
+
+
     </script>
 
     <style>
