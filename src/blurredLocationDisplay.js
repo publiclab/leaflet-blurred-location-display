@@ -111,7 +111,12 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                        title: title
                    }) ;
                    if(filterCoordinate(latitude , longitude)){
-                      m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a>") ;
+                      afterDecimal = latitude.toString().split(".")[1] ;
+                      precision = 0 ; 
+                      if(typeof afterDecimal !== "undefined") {
+                        precision = afterDecimal.length ;
+                      }
+                      m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
                       markers_array[markers_array.length] = m ;  
                    }
                    //layerGroup.addLayer(m) ;
