@@ -56,28 +56,28 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
       current_zoom = map.getZoom() ;
 
-      if(current_zoom >= 0 && current_zoom <=2){
+      if(current_zoom >= 0 && current_zoom <=5){
         // Show all markers 
         return true ; 
       }
-      else if(current_zoom >= 3 && current_zoom <=4){
+      else if(current_zoom >= 6 && current_zoom <=7){
         // remove <= 1  precision level coordinates
-         afterDecimal = lat.toString().split(".")[1].length ;
-         if(afterDecimal > 1) {
+         afterDecimal = lat.toString().split(".")[1] ;
+         if(typeof afterDecimal !== "undefined" && afterDecimal.length > 1) {
           return true ;
          }
       }
-      else if(current_zoom >= 5 && current_zoom <=7){
+      else if(current_zoom >= 8 && current_zoom <=10){
         // remove <= 3 precision level coordinates
-         afterDecimal = lat.toString().split(".")[1].length ;
-         if(afterDecimal > 3) {
+         afterDecimal = lat.toString().split(".")[1] ;
+         if(typeof afterDecimal !== "undefined" && afterDecimal.length > 3) {
           return true ;
          }
       }
-      else if(current_zoom >= 8 ){
+      else if(current_zoom >= 11 ){
         // remove <= 4 precision level coordinates
-         afterDecimal = lat.toString().split(".")[1].length ;
-         if(afterDecimal > 4) {
+         afterDecimal = lat.toString().split(".")[1] ;
+         if(typeof afterDecimal !== "undefined" && afterDecimal.length > 4) {
            return true ;
          }
       }
@@ -90,9 +90,12 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     function removeAllMarkers()
     {
       for(i in markers_array){
-         map.removeLayer(i) ;
+        console.log(i) ;
+         map.removeLayer(markers_array[i]) ;
        }
+       markers_array = [] ;
        markers_array.length = 0 ; 
+       console.log("Removed all markers !") ;
     }
 
     function fetchPeopleData(isOn)
@@ -109,7 +112,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
        
        $.getJSON(people_url , function (data) {
            //var layerGroup = L.layerGroup() ;
-
+           console.log("Data items " , data.items) ;
            if (!!data.items) {
                for (i = 0; i < data.items.length; i++) {
                    var mid = data.items[i].doc_id ;
@@ -136,6 +139,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
        // clear all markers 
        removeAllMarkers() ;
 
+        console.log("Zoomed !") ; 
        //we can add more API's in similar way by passing boolean value in options from API .
        fetchPeopleData(true) ; 
 
@@ -144,12 +148,16 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     map.on('moveend' , function () {
        // clear all markers 
        removeAllMarkers() ;
+
+       console.log("Panned !") ; 
        fetchPeopleData(true) ; 
    }) ;
 
 
 
   return {
+    markers_array: markers_array,
+    removeAllMarkers: removeAllMarkers,
     getBlurredLocations: getBlurredLocations,
     showPopUp: showPopUp,
     Interface: Interface,
@@ -179,16 +187,24 @@ module.exports = function Interface (options) {
         var SElng = options.blurredLocation.map.getBounds().getSouthEast().lng ;
         people_url = "https://publiclab.org/api/srch/nearbyPeople?nwlat=" + NWlat + "&selat=" + SElat + "&nwlng=" + NWlng + "&selng=" + SElng ;
 
-        $.getJSON("people_url" , function(data) {
-        	for(item in data.items) {
-            var lat = data.items[item]['latitude'];
-            var lng = data.items[item]['longitude'];
-            var url = data.items[item]['docUrl'];
-
-            L.marker([lat, lng]).addTo(options.blurredLocation.map);
-            console.log(lat);
-            console.log(lng);
-          }
+        $.getJSON(people_url , function(data) {
+        	   if (!!data.items) {
+               for (i = 0; i < data.items.length; i++) {
+                   var mid = data.items[i].doc_id ;
+                   var url = data.items[i].doc_url;
+                   var latitude = data.items[i].latitude ;
+                   var longitude = data.items[i].longitude ;
+                   var title = data.items[i].doc_title;
+                   var m = L.marker([data.items[i].latitude, data.items[i].longitude], {
+                       title: title
+                   }) ;
+                   if(filterCoordinate(latitude , longitude)){
+                      m.addTo(options.blurredLocation.map).bindPopup("<a href=" + url + ">" + title + "</a>") ;
+                      markers_array[markers_array.length] = m ;  
+                   }
+                   //layerGroup.addLayer(m) ;
+               }
+           }
         });
       }
 
@@ -196,7 +212,7 @@ module.exports = function Interface (options) {
    	  $(lng).change(addMarker);
   	}
 
-  getLocationWhenInputChanges();
+  //getLocationWhenInputChanges();
 
   return {
     getLocationWhenInputChanges: getLocationWhenInputChanges,
