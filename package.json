@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/mridulnagpal/Leaflet.BlurredLocationDisplay#readme",
   "devDependencies": {
-    "bootstrap": "^3.4.0",
+    "bootstrap": "^3.4.1",
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.0.0",
     "grunt-contrib-concat": "^1.0.1",
