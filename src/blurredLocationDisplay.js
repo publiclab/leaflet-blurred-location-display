@@ -7,6 +7,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   options.Interface = options.Interface || require('./ui/Interface.js');
   options.blurredLocation = options.blurredLocation || {};
+  options.PLpeopleAPI = options.PLpeopleAPI || false ;
   map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
   InterfaceOptions.blurredLocation = options.blurredLocation;
@@ -127,25 +128,29 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       }
     }
 
-    map.on('zoomend' , function () {
-       // clear all markers 
-       removeAllMarkers() ;
+    function fetchPLpeopleAPI() {
+          map.on('zoomend' , function () {
+             // clear all markers 
+             removeAllMarkers() ;
 
-        console.log("Zoomed !") ; 
-       //we can add more API's in similar way by passing boolean value in options from API .
-       fetchPeopleData(true) ; 
+             console.log("Zoomed !") ; 
+             //we can add more API's in similar way by passing boolean value in options from API .
+             fetchPeopleData(options.PLpeopleAPI) ; 
 
-   }) ;
+         }) ;
 
-    map.on('moveend' , function () {
-       // clear all markers 
-       removeAllMarkers() ;
+          map.on('moveend' , function () {
+             // clear all markers 
+             removeAllMarkers() ;
 
-       console.log("Panned !") ; 
-       fetchPeopleData(true) ; 
-   }) ;
+             console.log("Panned !") ; 
+             fetchPeopleData(options.PLpeopleAPI) ; 
+         }) ;
+    }
 
-
+    if(options.PLpeopleAPI){
+      fetchPLpeopleAPI() ;
+    }
 
   return {
     markers_array: markers_array,

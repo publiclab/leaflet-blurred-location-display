@@ -55,9 +55,19 @@
 
       var BlurredLocation = new BlurredLocation(options);
 
+      /* 
+        zoom_level <= 5              :  7 Markers
+        zoom_level between 6 and 7   :  5 Markers 
+        zoom_level between 8 and 10  :  3 Markers 
+        zoom_level >= 11             :  2 Markers
+      */
+
+      locations = [[23.1 , 77.1] , [20.1 , 70.1] , [25.111 , 80.111] , [15.111 , 69.111] , [24.1234 , 78.1234] , [27.123456 , 78.123456] , [30.123456 , 72.123456]] ;
+
       var options_display = {
         blurredLocation: BlurredLocation,
-        PLpeopleAPI: true
+        PLpeopleAPI: true,
+        locations: locations
       }
 
       var blurredLocationDisplay = new BlurredLocationDisplay(options_display);
