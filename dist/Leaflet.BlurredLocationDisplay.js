@@ -20,6 +20,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.blurredLocation = options.blurredLocation || {};
   options.PLpeopleAPI = options.PLpeopleAPI || false ;
   options.locations = options.locations || [] ;
+  options.source_url = options.source_url || "" ;
   map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
   InterfaceOptions.blurredLocation = options.blurredLocation;
@@ -28,6 +29,17 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   L.Icon.BlackIcon = L.Icon.extend({
       options: {
         iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      }
+   });
+
+   L.Icon.RedIcon = L.Icon.extend({
+      options: {
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
         shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
         iconSize: [25, 41],
         iconAnchor: [12, 41],
@@ -97,6 +109,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   var PLmarkers_array = [] ;
   var locations_markers_array = [] ;
+  var SourceUrl_markers_array = [] ;
 
   function removeAllMarkers(markers_array) {
     for(i in markers_array){
@@ -104,7 +117,6 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     }
     markers_array = [] ;
     markers_array.length = 0 ; 
-    console.log("Removed all markers !") ;
     return markers_array ; 
   }
 
@@ -146,7 +158,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   }
 
   function fetchLocationData(isOn) {
-    if(isOn === true){
+    if(isOn === true) {
       for(i=0 ; i < options.locations.length ; i++){
         var latitude = options.locations[i][0] ; 
         var longitude = options.locations[i][1] ; 
@@ -165,41 +177,87 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     }
   }
 
+  function fetchSourceUrlData(isOn) {
+    if(isOn === true) {
+      var NWlat = map.getBounds().getNorthWest().lat ;
+      var NWlng = map.getBounds().getNorthWest().lng ;
+      var SElat = map.getBounds().getSouthEast().lat ;
+      var SElng = map.getBounds().getSouthEast().lng ;
+
+      source_url = options.source_url + "?nwlat=" + NWlat + "&selat=" + SElat + "&nwlng=" + NWlng + "&selng=" + SElng ; 
+      $.getJSON(source_url , function (data) {
+        if (!!data.items) {
+          for (i = 0; i < data.items.length; i++) {
+            var RedIcon = new L.Icon.RedIcon() ;
+            var mid = data.items[i].doc_id ;
+            var url = data.items[i].doc_url;
+            var latitude = data.items[i].latitude ;
+            var longitude = data.items[i].longitude ;
+            var title = data.items[i].doc_title;
+            var m = L.marker([data.items[i].latitude, data.items[i].longitude], {
+                  icon: RedIcon
+            }) ;
+            if(filterCoordinate(latitude , longitude)){
+              afterDecimal = latitude.toString().split(".")[1] ;
+              precision = 0 ; 
+              if(typeof afterDecimal !== "undefined") {
+                precision = afterDecimal.length ;
+              }
+              m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
+              SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
+            }
+          }
+        }
+      });  
+    }
+  }
+
   function fetchPLpeopleAPI() {
     map.on('zoomend' , function () {
-      // clear all markers 
       PLmarkers_array = removeAllMarkers(PLmarkers_array) ;
-      //we can add more API's in similar way by passing boolean value in options from API .
-      fetchPeopleData(options.PLpeopleAPI) ; 
-      }) ;
+      fetchPeopleData(true) ; 
+    }) ;
 
-      map.on('moveend' , function () {
-        // clear all markers 
+    map.on('moveend' , function () {
         PLmarkers_array = removeAllMarkers(PLmarkers_array) ;
-        fetchPeopleData(options.PLpeopleAPI) ; 
-      }) ;
+        fetchPeopleData(true) ; 
+    }) ;
+  }
+
+  function activateParameter_locations() {
+    map.on('zoomend' , function () {
+      locations_markers_array = removeAllMarkers(locations_markers_array) ;
+      fetchLocationData(true) ; 
+    }) ;
+
+    map.on('moveend' , function () {
+      locations_markers_array = removeAllMarkers(locations_markers_array) ;
+      fetchLocationData(true) ; 
+    }) ;
+  }
+
+  function activateParameter_source_url() {
+    map.on('zoomend' , function () {
+      SourceUrl_markers_array = removeAllMarkers(SourceUrl_markers_array) ;
+      fetchSourceUrlData(true) ; 
+    }) ;
+
+    map.on('moveend' , function () {
+      SourceUrl_markers_array = removeAllMarkers(SourceUrl_markers_array) ;
+      fetchSourceUrlData(true) ; 
+    }) ;
   }
 
   if(options.PLpeopleAPI){
     fetchPLpeopleAPI() ;
   }
 
-  function activateParameter_locations() {
-    map.on('zoomend' , function () {
-      // clear all markers 
-      locations_markers_array = removeAllMarkers(locations_markers_array) ;
-      fetchLocationData(true) ; 
-    }) ;
-
-    map.on('moveend' , function () {
-      // clear all markers 
-      locations_markers_array = removeAllMarkers(locations_markers_array) ;
-      fetchLocationData(true) ; 
-    }) ;
+  if(options.locations.length !== 0) {
+    activateParameter_locations() ;
   }
 
-  if(options.locations.length !== 0) {
-      activateParameter_locations() ;
+  if(options.source_url !== "") {
+    activateParameter_source_url() ;
   }
 
   return {
