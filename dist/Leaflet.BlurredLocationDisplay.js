@@ -19,11 +19,22 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.Interface = options.Interface || require('./ui/Interface.js');
   options.blurredLocation = options.blurredLocation || {};
   options.PLpeopleAPI = options.PLpeopleAPI || false ;
+  options.locations = options.locations || [] ;
   map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
   InterfaceOptions.blurredLocation = options.blurredLocation;
   var Interface = options.Interface(InterfaceOptions);
 
+  L.Icon.BlackIcon = L.Icon.extend({
+      options: {
+        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
+        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+        iconSize: [25, 41],
+        iconAnchor: [12, 41],
+        popupAnchor: [1, -34],
+        shadowSize: [41, 41]
+      }
+   });
 
 
   function getBlurredLocations() {
@@ -84,9 +95,10 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       return false ;
   }
 
-    var markers_array = [] ;
+    var PLmarkers_array = [] ;
+    var locations_markers_array = [] ;
 
-    function removeAllMarkers()
+    function removeAllMarkers(markers_array)
     {
       for(i in markers_array){
         console.log(i) ;
@@ -95,6 +107,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
        markers_array = [] ;
        markers_array.length = 0 ; 
        console.log("Removed all markers !") ;
+       return markers_array ; 
     }
 
     function fetchPeopleData(isOn)
@@ -129,7 +142,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                         precision = afterDecimal.length ;
                       }
                       m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
-                      markers_array[markers_array.length] = m ;  
+                      PLmarkers_array[PLmarkers_array.length] = m ;  
                    }
                    //layerGroup.addLayer(m) ;
                }
@@ -139,10 +152,30 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       }
     }
 
+    function fetchLocationData(isOn) {
+      if(isOn === true){
+        for(i=0 ; i < options.locations.length ; i++){
+           var latitude = options.locations[i][0] ; 
+           var longitude = options.locations[i][1] ; 
+           var BlackIcon = new L.Icon.BlackIcon() ;
+           if(filterCoordinate(latitude , longitude)){
+              afterDecimal = latitude.toString().split(".")[1] ;
+              precision = 0 ; 
+              if(typeof afterDecimal !== "undefined") {
+                precision = afterDecimal.length ;
+              }
+              var m = L.marker([latitude, longitude] , {icon: BlackIcon}) ;
+              m.addTo(map).bindPopup("Precision : " + precision) ;
+              locations_markers_array[locations_markers_array.length] = m ;
+           }
+        } 
+      }
+    }
+
     function fetchPLpeopleAPI() {
           map.on('zoomend' , function () {
              // clear all markers 
-             removeAllMarkers() ;
+             PLmarkers_array = removeAllMarkers(PLmarkers_array) ;
 
              console.log("Zoomed !") ; 
              //we can add more API's in similar way by passing boolean value in options from API .
@@ -152,7 +185,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
           map.on('moveend' , function () {
              // clear all markers 
-             removeAllMarkers() ;
+             PLmarkers_array = removeAllMarkers(PLmarkers_array) ;
 
              console.log("Panned !") ; 
              fetchPeopleData(options.PLpeopleAPI) ; 
@@ -163,8 +196,28 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       fetchPLpeopleAPI() ;
     }
 
+
+    function activateParameter_locations() {
+        map.on('zoomend' , function () {
+            // clear all markers 
+            locations_markers_array = removeAllMarkers(locations_markers_array) ;
+            fetchLocationData(true) ; 
+
+        }) ;
+
+        map.on('moveend' , function () {
+            // clear all markers 
+            locations_markers_array = removeAllMarkers(locations_markers_array) ;
+            fetchLocationData(true) ; 
+        }) ;
+    }
+
+    if(options.locations.length !== 0)
+    {
+      activateParameter_locations() ;
+    }
+
   return {
-    markers_array: markers_array,
     removeAllMarkers: removeAllMarkers,
     getBlurredLocations: getBlurredLocations,
     showPopUp: showPopUp,
