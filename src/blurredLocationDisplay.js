@@ -12,7 +12,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.source_url = options.source_url || "" ;
   options.JSONparser = options.JSONparser || defaultJSONparser ;
 
-  map = options.blurredLocation.map ;
+  let map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
   InterfaceOptions.blurredLocation = options.blurredLocation;
   var Interface = options.Interface(InterfaceOptions);
