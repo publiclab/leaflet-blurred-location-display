@@ -7,9 +7,11 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   options.Interface = options.Interface || require('./ui/Interface.js');
   options.blurredLocation = options.blurredLocation || {};
-  options.PLpeopleAPI = options.PLpeopleAPI || false ;
+
   options.locations = options.locations || [] ;
   options.source_url = options.source_url || "" ;
+  options.JSONparser = options.JSONparser || defaultJSONparser ;
+
   map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
   InterfaceOptions.blurredLocation = options.blurredLocation;
@@ -96,7 +98,23 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       return false ;
   }
 
-  var PLmarkers_array = [] ;
+  function defaultJSONparser(data)
+  {
+      parsed_data = [] ; 
+      if (!!data.items) {
+        for (i = 0 ; i < data.items.length ; i++) {
+          let obj = {} ;
+          obj["id"] = data.items[i].doc_id ;
+          obj["url"] = data.items[i].doc_url;
+          obj["latitude"] = data.items[i].latitude ;
+          obj["longitude"] = data.items[i].longitude ;
+          obj["title"] = data.items[i].doc_title ;
+          parsed_data[parsed_data.length] = obj ;
+        }
+      }
+      return parsed_data ;   
+  }
+
   var locations_markers_array = [] ;
   var SourceUrl_markers_array = [] ;
 
@@ -109,43 +127,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     return markers_array ; 
   }
 
-  function fetchPeopleData(isOn) {
-    if(isOn === true)
-    {
-      var NWlat = map.getBounds().getNorthWest().lat ;
-      var NWlng = map.getBounds().getNorthWest().lng ;
-      var SElat = map.getBounds().getSouthEast().lat ;
-      var SElng = map.getBounds().getSouthEast().lng ;
-
-      people_url = "https://publiclab.org/api/srch/nearbyPeople?nwlat=" + NWlat + "&selat=" + SElat + "&nwlng=" + NWlng + "&selng=" + SElng ; 
-       
-      $.getJSON(people_url , function (data) {
-        if (!!data.items) {
-          for (i = 0; i < data.items.length; i++) {
-            var mid = data.items[i].doc_id ;
-            var url = data.items[i].doc_url;
-            var latitude = data.items[i].latitude ;
-            var longitude = data.items[i].longitude ;
-            var title = data.items[i].doc_title;
-            var m = L.marker([data.items[i].latitude, data.items[i].longitude], {
-                  title: title
-            }) ;
-            if(filterCoordinate(latitude , longitude)){
-              afterDecimal = latitude.toString().split(".")[1] ;
-              precision = 0 ; 
-              if(typeof afterDecimal !== "undefined") {
-                precision = afterDecimal.length ;
-              }
-              m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
-              PLmarkers_array[PLmarkers_array.length] = m ;  
-            }
-
-          }
-        }
-      });
-    }
-  }
-
+  
   function fetchLocationData(isOn) {
     if(isOn === true) {
       for(i=0 ; i < options.locations.length ; i++){
@@ -174,82 +156,71 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       var SElng = map.getBounds().getSouthEast().lng ;
 
       source_url = options.source_url + "?nwlat=" + NWlat + "&selat=" + SElat + "&nwlng=" + NWlng + "&selng=" + SElng ; 
+     
       $.getJSON(source_url , function (data) {
-        if (!!data.items) {
-          for (i = 0; i < data.items.length; i++) {
-            var RedIcon = new L.Icon.RedIcon() ;
-            var mid = data.items[i].doc_id ;
-            var url = data.items[i].doc_url;
-            var latitude = data.items[i].latitude ;
-            var longitude = data.items[i].longitude ;
-            var title = data.items[i].doc_title;
-            var m = L.marker([data.items[i].latitude, data.items[i].longitude], {
+            
+            var parsed_data = options.JSONparser(data) ;  // JSONparser defined by user used here !
+            
+            for(i=0 ; i<parsed_data.length ; i++){
+              var RedIcon = new L.Icon.RedIcon() ;
+              var obj = parsed_data[i] ;
+              var id = obj["id"] ;
+              var url = obj["url"] ;
+              var latitude = obj["latitude"] ;
+              var longitude = obj["longitude"] ;
+              var title = obj["title"] ;
+              var m = L.marker([latitude,longitude], {
                   icon: RedIcon
-            }) ;
-            if(filterCoordinate(latitude , longitude)){
-              afterDecimal = latitude.toString().split(".")[1] ;
-              precision = 0 ; 
-              if(typeof afterDecimal !== "undefined") {
-                precision = afterDecimal.length ;
-              }
-              m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
-              SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
+              }) ;
+
+              if(filterCoordinate(latitude , longitude)){
+                afterDecimal = latitude.toString().split(".")[1] ;
+                precision = 0 ; 
+                if(typeof afterDecimal !== "undefined") {
+                  precision = afterDecimal.length ;
+                }
+                m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
+                SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
+              }  
             }
-          }
-        }
       });  
     }
   }
 
-  function fetchPLpeopleAPI() {
+  function return_locations_markers_array(){
+    return locations_markers_array ; 
+  }
+
+  function return_SourceUrl_markers_array(){
+    return SourceUrl_markers_array ; 
+  }
+
+  function activate_listeners(return_markers_array , fetchData)
+  {
     map.on('zoomend' , function () {
-      PLmarkers_array = removeAllMarkers(PLmarkers_array) ;
-      fetchPeopleData(true) ; 
+      markers_array = return_markers_array() ;
+      markers_array = removeAllMarkers(markers_array) ;
+      fetchData(true) ; 
     }) ;
 
     map.on('moveend' , function () {
-        PLmarkers_array = removeAllMarkers(PLmarkers_array) ;
-        fetchPeopleData(true) ; 
+      markers_array = return_markers_array() ;
+      markers_array = removeAllMarkers(markers_array) ;
+      fetchData(true) ; 
     }) ;
-  }
-
-  function activateParameter_locations() {
-    map.on('zoomend' , function () {
-      locations_markers_array = removeAllMarkers(locations_markers_array) ;
-      fetchLocationData(true) ; 
-    }) ;
-
-    map.on('moveend' , function () {
-      locations_markers_array = removeAllMarkers(locations_markers_array) ;
-      fetchLocationData(true) ; 
-    }) ;
-  }
-
-  function activateParameter_source_url() {
-    map.on('zoomend' , function () {
-      SourceUrl_markers_array = removeAllMarkers(SourceUrl_markers_array) ;
-      fetchSourceUrlData(true) ; 
-    }) ;
-
-    map.on('moveend' , function () {
-      SourceUrl_markers_array = removeAllMarkers(SourceUrl_markers_array) ;
-      fetchSourceUrlData(true) ; 
-    }) ;
-  }
-
-  if(options.PLpeopleAPI){
-    fetchPLpeopleAPI() ;
   }
 
   if(options.locations.length !== 0) {
-    activateParameter_locations() ;
+    activate_listeners(return_locations_markers_array , fetchLocationData) ; 
   }
 
   if(options.source_url !== "") {
-    activateParameter_source_url() ;
+     activate_listeners(return_SourceUrl_markers_array , fetchSourceUrlData) ; 
   }
 
   return {
+    return_locations_markers_array: return_locations_markers_array ,
+    return_SourceUrl_markers_array: return_SourceUrl_markers_array,
     removeAllMarkers: removeAllMarkers,
     getBlurredLocations: getBlurredLocations,
     showPopUp: showPopUp,

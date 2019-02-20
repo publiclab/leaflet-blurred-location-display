@@ -55,6 +55,24 @@
 
       var BlurredLocation = new BlurredLocation(options);
 
+      // document this !
+      function JSONparser(data)
+      {
+        parsed_data = [] ; 
+        if (!!data.items) {
+          for (i = 0 ; i < data.items.length ; i++) {
+            let obj = {} ;
+            obj["id"] = data.items[i].doc_id ;
+            obj["url"] = data.items[i].doc_url;
+            obj["latitude"] = parseFloat(data.items[i].latitude) ;
+            obj["longitude"] = parseFloat(data.items[i].longitude) ;
+            obj["title"] = data.items[i].doc_title ;
+            parsed_data[parsed_data.length] = obj ;
+          }
+        }
+        return parsed_data ; 
+      }
+
       /* 
         zoom_level <= 5              :  7 Markers
         zoom_level between 6 and 7   :  5 Markers 
@@ -72,9 +90,9 @@
 
       var options_display = {
         blurredLocation: BlurredLocation,
-        PLpeopleAPI: true,
         locations: locations,
-        source_url: "https://publiclab.org/api/srch/taglocations"
+        source_url: "https://publiclab.org/api/srch/nearbyPeople",
+        JSONparser: JSONparser
       }
 
       var blurredLocationDisplay = new BlurredLocationDisplay(options_display);
