@@ -170,14 +170,18 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   function activate_listeners(return_markers_array , fetchData)
   {
     map.on('zoomend' , function () {
-      markers_array = return_markers_array() ;
+      let markers_array = return_markers_array() ;
+      let m_array = markers_array ;
       markers_array = removeAllMarkers(markers_array) ;
+      m_array = 0 ;
       fetchData(true) ; 
     }) ;
 
     map.on('moveend' , function () {
-      markers_array = return_markers_array() ;
+      let markers_array = return_markers_array() ;
+      let m_array = markers_array ; 
       markers_array = removeAllMarkers(markers_array) ;
+      m_array.length=0 ;
       fetchData(true) ; 
     }) ;
   }
