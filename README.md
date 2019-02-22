@@ -5,11 +5,21 @@ leaflet-blurred-location-display
 
 
 
-**This is a working draft; the project will be working towards an initial v0.0.1 release in coming weeks**
-
 leaflet-blurred-location-display is an extension of leaflet-blurred-location and does the following:
 
-* Cleverly dispays your location, keeping your privacy settings in mind
+* Cleverly dispays your location, keeping your privacy settings in mind .
+
+* Color code the markers according to the precision of the coordinates .
+
+| Precision  |  Color of marker  |
+|------------|-------------------|
+|	0		 |		Blue		 |
+|	1		 |		Red			 |
+|	2		 |		Orange		 |
+|	3		 |		Green		 |
+|	4		 |		Black	     |
+|   5        |      Grey    	 |
+|   >=6      |      Yellow   	 |
 
 ## Setting up leaflet-blurred-location-display
 
