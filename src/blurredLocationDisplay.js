@@ -189,7 +189,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 
               }  
             }
-            ColorCenterRectangle() ;
+            ColorRectangles() ;
       });  
     }
   }
@@ -210,7 +210,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       markers_array = removeAllMarkers(markers_array) ;
       m_array.length = 0 ;
       fetchData(true) ; 
-      ColorCenterRectangle() ;
+      ColorRectangles() ;
     }) ;
 
     map.on('moveend' , function () {
@@ -219,7 +219,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       markers_array = removeAllMarkers(markers_array) ;
       m_array.length = 0 ;
       fetchData(true) ; 
-      ColorCenterRectangle() ;
+      ColorRectangles() ;
     }) ;
   }
 
@@ -231,13 +231,13 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
      activate_listeners(return_SourceUrl_markers_array , fetchSourceUrlData) ; 
   }
 
-  rectangle_options = {
+  let rectangle_options = {
     return_locations_markers_array: return_locations_markers_array,
     return_SourceUrl_markers_array: return_SourceUrl_markers_array,
     blurredLocation: options.blurredLocation
   }
   options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
-  ColorCenterRectangle = options.gridCenterRectangle(rectangle_options) ;
+  ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
   
   return {
     return_locations_markers_array: return_locations_markers_array ,
