@@ -12,10 +12,7 @@
 BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   options = options || {};
-  options.currPrecision = options.currPrecision || 2;
-  options.list = options.list || [[35.3, 39.2, "Popup Text"],[35.3554, 39.2623, "Popup Text"]];
-  options.currBoxUpperLeft = options.currBoxUpperLeft || [35.35, 39.26];
-
+ 
   options.Interface = options.Interface || require('./ui/Interface.js');
   options.blurredLocation = options.blurredLocation || {};
 
@@ -29,31 +26,6 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   var Interface = options.Interface(InterfaceOptions);
 
   require('./ui/iconColors.js') ;
-
-  function getBlurredLocations() {
-
-    blurredLocations = [];
-    afterDecimal = 0
-
-    for(i in options.list) {
-      lat = options.list[i][0]
-      afterDecimal = lat.toString().split(".")[1]
-      if(afterDecimal.length >= options.currPrecision) {
-        if(options.list[i][0] >= options.currBoxUpperLeft[0] && options.list[i][0] <= options.currBoxUpperLeft[0] + 10**(-1*options.currPrecision) && options.list[i][1] >= options.currBoxUpperLeft[1] && options.list[i][1] <= options.currBoxUpperLeft[1] + 10**(-1*options.currPrecision) ) {
-        blurredLocations[blurredLocations.length] = options.list[i];
-        }
-      }
-    }
-    return blurredLocations;
-  }
-
-  function showPopUp() {
-    blurredLocations = getBlurredLocations();
-    for(i in blurredLocations) {
-      alert(blurredLocations[i][2]);
-    }
-    return blurredLocations;
-  }
 
   function filterCoordinate(lat , lng) {
 
@@ -209,14 +181,18 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   function activate_listeners(return_markers_array , fetchData)
   {
     map.on('zoomend' , function () {
-      markers_array = return_markers_array() ;
+      let markers_array = return_markers_array() ;
+      let m_array = markers_array ;
       markers_array = removeAllMarkers(markers_array) ;
+      m_array = 0 ;
       fetchData(true) ; 
     }) ;
 
     map.on('moveend' , function () {
-      markers_array = return_markers_array() ;
+      let markers_array = return_markers_array() ;
+      let m_array = markers_array ; 
       markers_array = removeAllMarkers(markers_array) ;
+      m_array.length=0 ;
       fetchData(true) ; 
     }) ;
   }
@@ -229,13 +205,66 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
      activate_listeners(return_SourceUrl_markers_array , fetchSourceUrlData) ; 
   }
 
+  function getMarkersOfPrecision(precision){
+    var locations_markers = return_locations_markers_array() ;
+    var sourceurl_markers = return_SourceUrl_markers_array() ; 
+
+    var filtered_locations_markers = [] ;
+    var filtered_sourceurl_markers = [] ;
+
+    for(i=0 ; i < locations_markers.length ; i++){
+      let after_decimal = locations_markers[i]._latlng.lat.toString().split(".")[1] ;
+      let precision_of_marker = 0 ; 
+      if(typeof after_decimal !== "undefined") {
+          precision_of_marker = after_decimal.length ;
+      }
+      if(precision_of_marker === precision){
+        filtered_locations_markers[filtered_locations_markers.length] = locations_markers[i] ; 
+      }
+    }
+
+    for(i=0 ; i < sourceurl_markers.length ; i++){
+      let after_decimal = sourceurl_markers[i]._latlng.lat.toString().split(".")[1] ;
+      let precision_of_marker = 0 ; 
+      if(typeof after_decimal !== "undefined") {
+          precision_of_marker = after_decimal.length ;
+      }
+      if(precision_of_marker === precision){
+        filtered_sourceurl_markers[filtered_sourceurl_markers.length] = sourceurl_markers[i] ; 
+      }
+    }
+
+    return {
+      filtered_locations_markers: filtered_locations_markers,
+      filtered_sourceurl_markers: filtered_sourceurl_markers
+    }
+  }
+
+  function filterCoordinatesToPrecison(precision)
+  {
+    let locations = options.locations ; 
+    let filtered_locations = [] ; 
+
+    for(let i=0 ; i < locations.length ; i++){
+      let after_decimal = locations[i][0].toString().split(".")[1] ;
+      let precision_of_coordinate = 0 ; 
+      if(typeof after_decimal !== "undefined") {
+          precision_of_coordinate = after_decimal.length ;
+      }
+      if(precision_of_coordinate === precision){
+        filtered_locations[filtered_locations.length] = locations[i] ; 
+      }  
+    }
+    return filtered_locations ;
+  }
+
   return {
-    return_locations_markers_array: return_locations_markers_array ,
-    return_SourceUrl_markers_array: return_SourceUrl_markers_array,
+    locations_markers_array: return_locations_markers_array ,
+    SourceUrl_markers_array: return_SourceUrl_markers_array,
     removeAllMarkers: removeAllMarkers,
-    getBlurredLocations: getBlurredLocations,
-    showPopUp: showPopUp,
     Interface: Interface,
+    getMarkersOfPrecision: getMarkersOfPrecision, 
+    filterCoordinatesToPrecison: filterCoordinatesToPrecison
   }
 }
 
@@ -247,52 +276,9 @@ module.exports = function Interface (options) {
     options.lngId = options.lngId || 'lng';
 
     options.blurredLocation = options.blurredLocation;
-  
-  /* This is taken automatically by "moveend" listenner ! */
-  
-  //   function getLocationWhenInputChanges() {
-  //     var lat = document.getElementById(options.latId);
-  //     var lng = document.getElementById(options.lngId);
-
-  //     function addMarker() {
-
-  //       var latitude = options.blurredLocation.getLat();
-  //       var longitude = options.blurredLocation.getLon();
-  //       var NWlat = options.blurredLocation.map.getBounds().getNorthWest().lat ;
-  //       var NWlng = options.blurredLocation.map.getBounds().getNorthWest().lng ;
-  //       var SElat = options.blurredLocation.map.getBounds().getSouthEast().lat ;
-  //       var SElng = options.blurredLocation.map.getBounds().getSouthEast().lng ;
-  //       people_url = "https://publiclab.org/api/srch/nearbyPeople?nwlat=" + NWlat + "&selat=" + SElat + "&nwlng=" + NWlng + "&selng=" + SElng ;
-
-  //       $.getJSON(people_url , function(data) {
-  //       	   if (!!data.items) {
-  //              for (i = 0; i < data.items.length; i++) {
-  //                  var mid = data.items[i].doc_id ;
-  //                  var url = data.items[i].doc_url;
-  //                  var latitude = data.items[i].latitude ;
-  //                  var longitude = data.items[i].longitude ;
-  //                  var title = data.items[i].doc_title;
-  //                  var m = L.marker([data.items[i].latitude, data.items[i].longitude], {
-  //                      title: title
-  //                  }) ;
-  //                  if(filterCoordinate(latitude , longitude)){
-  //                     m.addTo(options.blurredLocation.map).bindPopup("<a href=" + url + ">" + title + "</a>") ;
-  //                     markers_array[markers_array.length] = m ;  
-  //                  }
-  //                  //layerGroup.addLayer(m) ;
-  //              }
-  //          }
-  //       });
-  //     }
-
-	 //    $(lat).change(addMarker);
-  //  	  $(lng).change(addMarker);
-  // 	}
-
-  // //getLocationWhenInputChanges();
 
   return {
-   // getLocationWhenInputChanges: getLocationWhenInputChanges,
+
   }
 }
 },{}],5:[function(require,module,exports){
