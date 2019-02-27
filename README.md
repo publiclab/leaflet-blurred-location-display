@@ -6,24 +6,34 @@ leaflet-blurred-location-display (LBLD)
 
 leaflet-blurred-location-display is an extension of leaflet-blurred-location and does the following:
 
-* Cleverly dispays your location, keeping your privacy settings in mind .
-* Color code the markers on the map according to the precision .
+* Cleverly dispays your location, keeping your privacy settings in mind.
+* Color code the markers on the map according to the precision.
 * Fetches data from remote API or you may pass array of coordinates directly into LBLD API (see example below)
 
-## Demo : 
-1.) See how markers are filtered at different zoom levels : 
+## Demo
+
+1. See how markers are filtered at different zoom levels : 
 https://publiclab.github.io/leaflet-blurred-location-display/examples/example.html
 
-2.) See how markers are fetched from remote/external API : 
+2. See how markers are fetched from remote/external API : 
 https://publiclab.github.io/leaflet-blurred-location-display/examples/index.html
 
+| Precision  |  Color of marker  |
+|------------|-------------------|
+|	0		 |		Blue		 |
+|	1		 |		Red			 |
+|	2		 |		Orange		 |
+|	3		 |		Green		 |
+|	4		 |		Black	     |
+|   5        |      Grey    	 |
+|   >=6      |      Yellow   	 |
 
-## Setting up leaflet-blurred-location-display :
+## Setting up leaflet-blurred-location-display
 
 To set up the library first clone this repo to your local after that run 'npm install' to install all the neccessary packages required.
 
 
-## Some terms used :
+## Some terms used
 
 * LBLD = leaflet-blurred-location-display .
 * LBL = leaflet-blurred-location
@@ -37,57 +47,62 @@ To set up the library first clone this repo to your local after that run 'npm in
 
 ### Basic
 
-##### Define the LBL object : 
+##### Define the LBL object
+
 See https://github.com/publiclab/leaflet-blurred-location for more details 
      
      var BlurredLocation = new BlurredLocation(options);
 
-##### Passing Coordinates directly into the LBLD API :
+##### Passing Coordinates directly into the LBLD API
 
-      
-      locations = [[23.1 ,      77.1],
-                   [20.1 ,      76.1],
-                   [21.111 ,    76.111],
-                   [22.111 ,    78.111],
-                   [23.1234 ,   76.1234],
-                   [24.123456 , 78.123456],
-                   [25.123456 , 77.123456]];
+```js
+locations = [[23.1 ,      77.1],
+             [20.1 ,      76.1],
+             [21.111 ,    76.111],
+             [22.111 ,    78.111],
+             [23.1234 ,   76.1234],
+             [24.123456 , 78.123456],
+             [25.123456 , 77.123456]];
 
-      var options_display = {
-        blurredLocation: BlurredLocation,   // compulsory to pass
-        locations: locations
-      }
-      
-##### Using external API to fetch data :      
-   
-    var options_display = {
-        blurredLocation: BlurredLocation,  // compulsory to pass
-        source_url: "https://publiclab.org/api/srch/nearbyPeople",  // external API 
-        JSONparser: JSONparser                              // function to parse the above API
-      }
+var options_display = {
+  blurredLocation: BlurredLocation, // compulsory to pass
+  locations: locations
+}
+```
 
-* JSONparser for external API :
-    1.) Make an array of object .
-    2.) Each object should have same parameters - id , url , latitude , longitude , title .
-    3.) All the above parameters are used to make pop-up of each marker .
-    4.) The below is also the default JSONparser which will be used automatically .
+##### Using external API to fetch data
 
-      function JSONparser(data)
-      {
-        parsed_data = [] ; 
-        if (!!data.items) {
-          for (i = 0 ; i < data.items.length ; i++) {
-            let obj = {} ;
-            obj["id"] = data.items[i].doc_id ;
-            obj["url"] = data.items[i].doc_url;
-            obj["latitude"] = parseFloat(data.items[i].latitude) ;
-            obj["longitude"] = parseFloat(data.items[i].longitude) ;
-            obj["title"] = data.items[i].doc_title ;
-            parsed_data[parsed_data.length] = obj ;
-          }
-        }
-        return parsed_data ; 
-      }
+```js
+var options_display = {
+    blurredLocation: BlurredLocation, // compulsory to pass
+    source_url: "https://publiclab.org/api/srch/nearbyPeople", // external API 
+    JSONparser: function jsonParser(result) { } // function to parse the above API
+  }
+```
+
+* JSONparser for external API:
+    1. Make an array of object.
+    2. Each object should have same parameters - `id`, `url`, `latitude`, `longitude`, `title`.
+    3. All the above parameters are used to make pop-up of each marker.
+    4. The below is also the default JSONparser which will be used automatically.
+
+```js
+function JSONparser(data) {
+  parsed_data = []; 
+  if (!!data.items) {
+    for (i = 0 ; i < data.items.length; i++) {
+      let obj = {};
+      obj["id"] = data.items[i].doc_id;
+      obj["url"] = data.items[i].doc_url;
+      obj["latitude"] = parseFloat(data.items[i].latitude);
+      obj["longitude"] = parseFloat(data.items[i].longitude);
+      obj["title"] = data.items[i].doc_title;
+      parsed_data[parsed_data.length] = obj;
+    }
+  }
+  return parsed_data; 
+}
+```
 
 **[NOTE: We can use external API and also pass local data simultaneously !]
 
