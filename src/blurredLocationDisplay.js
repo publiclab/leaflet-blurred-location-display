@@ -1,10 +1,7 @@
 BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   options = options || {};
-  options.currPrecision = options.currPrecision || 2;
-  options.list = options.list || [[35.3, 39.2, "Popup Text"],[35.3554, 39.2623, "Popup Text"]];
-  options.currBoxUpperLeft = options.currBoxUpperLeft || [35.35, 39.26];
-
+ 
   options.Interface = options.Interface || require('./ui/Interface.js');
   options.blurredLocation = options.blurredLocation || {};
 
@@ -17,53 +14,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   InterfaceOptions.blurredLocation = options.blurredLocation;
   var Interface = options.Interface(InterfaceOptions);
 
-  L.Icon.BlackIcon = L.Icon.extend({
-      options: {
-        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      }
-   });
-
-   L.Icon.RedIcon = L.Icon.extend({
-      options: {
-        iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-        iconSize: [25, 41],
-        iconAnchor: [12, 41],
-        popupAnchor: [1, -34],
-        shadowSize: [41, 41]
-      }
-   });
-
-
-  function getBlurredLocations() {
-
-    blurredLocations = [];
-    afterDecimal = 0
-
-    for(i in options.list) {
-      lat = options.list[i][0]
-      afterDecimal = lat.toString().split(".")[1]
-      if(afterDecimal.length >= options.currPrecision) {
-        if(options.list[i][0] >= options.currBoxUpperLeft[0] && options.list[i][0] <= options.currBoxUpperLeft[0] + 10**(-1*options.currPrecision) && options.list[i][1] >= options.currBoxUpperLeft[1] && options.list[i][1] <= options.currBoxUpperLeft[1] + 10**(-1*options.currPrecision) ) {
-        blurredLocations[blurredLocations.length] = options.list[i];
-        }
-      }
-    }
-    return blurredLocations;
-  }
-
-  function showPopUp() {
-    blurredLocations = getBlurredLocations();
-    for(i in blurredLocations) {
-      alert(blurredLocations[i][2]);
-    }
-    return blurredLocations;
-  }
+  require('./ui/iconColors.js') ;
 
   function filterCoordinate(lat , lng) {
 
@@ -129,20 +80,41 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     return markers_array ; 
   }
 
+  function IconColor(precision){
+    if(precision === 0){
+       return new L.Icon.BlueIcon() ;
+    }
+    else if(precision === 1){
+      return new L.Icon.RedIcon() ;
+    }
+    else if(precision === 2){
+      return new L.Icon.OrangeIcon() ;
+    }
+    else if(precision === 3){
+      return new L.Icon.GreenIcon() ;
+    }
+    else if(precision === 4){
+      return new L.Icon.BlackIcon() ;
+    }
+    else if(precision === 5){
+      return new L.Icon.GreyIcon() ;
+    }
+    return new L.Icon.YellowIcon() ;
+  }
   
   function fetchLocationData(isOn) {
     if(isOn === true) {
       for(i=0 ; i < options.locations.length ; i++){
         var latitude = options.locations[i][0] ; 
         var longitude = options.locations[i][1] ; 
-        var BlackIcon = new L.Icon.BlackIcon() ;
         if(filterCoordinate(latitude , longitude)){
               afterDecimal = latitude.toString().split(".")[1] ;
               precision = 0 ; 
               if(typeof afterDecimal !== "undefined") {
                 precision = afterDecimal.length ;
               }
-              var m = L.marker([latitude, longitude] , {icon: BlackIcon}) ;
+              var icon_color = IconColor(precision) ;
+              var m = L.marker([latitude, longitude] , {icon: icon_color}) ;
               m.addTo(map).bindPopup("Precision : " + precision) ;
               locations_markers_array[locations_markers_array.length] = m ;
         }
@@ -164,16 +136,12 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
             var parsed_data = options.JSONparser(data) ;  // JSONparser defined by user used here !
             
             for(i=0 ; i<parsed_data.length ; i++){
-              var RedIcon = new L.Icon.RedIcon() ;
               var obj = parsed_data[i] ;
               var id = obj["id"] ;
               var url = obj["url"] ;
               var latitude = obj["latitude"] ;
               var longitude = obj["longitude"] ;
               var title = obj["title"] ;
-              var m = L.marker([latitude,longitude], {
-                  icon: RedIcon
-              }) ;
 
               if(filterCoordinate(latitude , longitude)){
                 afterDecimal = latitude.toString().split(".")[1] ;
@@ -181,12 +149,13 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 if(typeof afterDecimal !== "undefined") {
                   precision = afterDecimal.length ;
                 }
-                if(SourceUrl_id_map.has(id) === false){
-                  m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
-                  SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
-                  SourceUrl_id_map.set(id, true) ;
-                }
                 
+                var icon_color = IconColor(precision) ;
+                var m = L.marker([latitude,longitude], {
+                  icon: icon_color
+                }) ;
+                m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
+                SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
               }  
             }
             ColorRectangles() ;
@@ -239,13 +208,66 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
   ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
   
+  function getMarkersOfPrecision(precision){
+    var locations_markers = return_locations_markers_array() ;
+    var sourceurl_markers = return_SourceUrl_markers_array() ; 
+
+    var filtered_locations_markers = [] ;
+    var filtered_sourceurl_markers = [] ;
+
+    for(i=0 ; i < locations_markers.length ; i++){
+      let after_decimal = locations_markers[i]._latlng.lat.toString().split(".")[1] ;
+      let precision_of_marker = 0 ; 
+      if(typeof after_decimal !== "undefined") {
+          precision_of_marker = after_decimal.length ;
+      }
+      if(precision_of_marker === precision){
+        filtered_locations_markers[filtered_locations_markers.length] = locations_markers[i] ; 
+      }
+    }
+
+    for(i=0 ; i < sourceurl_markers.length ; i++){
+      let after_decimal = sourceurl_markers[i]._latlng.lat.toString().split(".")[1] ;
+      let precision_of_marker = 0 ; 
+      if(typeof after_decimal !== "undefined") {
+          precision_of_marker = after_decimal.length ;
+      }
+      if(precision_of_marker === precision){
+        filtered_sourceurl_markers[filtered_sourceurl_markers.length] = sourceurl_markers[i] ; 
+      }
+    }
+
+    return {
+      filtered_locations_markers: filtered_locations_markers,
+      filtered_sourceurl_markers: filtered_sourceurl_markers
+    }
+  }
+
+  function filterCoordinatesToPrecison(precision)
+  {
+    let locations = options.locations ; 
+    let filtered_locations = [] ; 
+
+    for(let i=0 ; i < locations.length ; i++){
+      let after_decimal = locations[i][0].toString().split(".")[1] ;
+      let precision_of_coordinate = 0 ; 
+      if(typeof after_decimal !== "undefined") {
+          precision_of_coordinate = after_decimal.length ;
+      }
+      if(precision_of_coordinate === precision){
+        filtered_locations[filtered_locations.length] = locations[i] ; 
+      }  
+    }
+    return filtered_locations ;
+  }
+
   return {
-    return_locations_markers_array: return_locations_markers_array ,
-    return_SourceUrl_markers_array: return_SourceUrl_markers_array,
+    locations_markers_array: return_locations_markers_array ,
+    SourceUrl_markers_array: return_SourceUrl_markers_array,
     removeAllMarkers: removeAllMarkers,
-    getBlurredLocations: getBlurredLocations,
-    showPopUp: showPopUp,
     Interface: Interface,
+    getMarkersOfPrecision: getMarkersOfPrecision, 
+    filterCoordinatesToPrecison: filterCoordinatesToPrecison
   }
 }
 
