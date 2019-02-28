@@ -68,6 +68,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   var locations_markers_array = [] ;
   var SourceUrl_markers_array = [] ;
+  var SourceUrl_id_map = new Map() ; 
 
   function removeAllMarkers(markers_array) {
     for(i in markers_array){
@@ -75,6 +76,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     }
     markers_array = [] ;
     markers_array.length = 0 ; 
+    SourceUrl_id_map.clear() ;
     return markers_array ; 
   }
 
@@ -128,7 +130,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       var SElng = map.getBounds().getSouthEast().lng ;
 
       source_url = options.source_url + "?nwlat=" + NWlat + "&selat=" + SElat + "&nwlng=" + NWlng + "&selng=" + SElng ; 
-     
+
       $.getJSON(source_url , function (data) {
             
             var parsed_data = options.JSONparser(data) ;  // JSONparser defined by user used here !
@@ -155,6 +157,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
               }  
             }
+            ColorRectangles() ;
       });  
     }
   }
@@ -173,16 +176,18 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       let markers_array = return_markers_array() ;
       let m_array = markers_array ;
       markers_array = removeAllMarkers(markers_array) ;
-      m_array = 0 ;
+      m_array.length = 0 ;
       fetchData(true) ; 
+      ColorRectangles() ;
     }) ;
 
     map.on('moveend' , function () {
       let markers_array = return_markers_array() ;
-      let m_array = markers_array ; 
+      let m_array = markers_array ;
       markers_array = removeAllMarkers(markers_array) ;
-      m_array.length=0 ;
+      m_array.length = 0 ;
       fetchData(true) ; 
+      ColorRectangles() ;
     }) ;
   }
 
@@ -194,6 +199,14 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
      activate_listeners(return_SourceUrl_markers_array , fetchSourceUrlData) ; 
   }
 
+  let rectangle_options = {
+    return_locations_markers_array: return_locations_markers_array,
+    return_SourceUrl_markers_array: return_SourceUrl_markers_array,
+    blurredLocation: options.blurredLocation
+  }
+  options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
+  let ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
+  
   function getMarkersOfPrecision(precision){
     var locations_markers = return_locations_markers_array() ;
     var sourceurl_markers = return_SourceUrl_markers_array() ; 
