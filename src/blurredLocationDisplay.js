@@ -149,7 +149,6 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 if(typeof afterDecimal !== "undefined") {
                   precision = afterDecimal.length ;
                 }
-                
                 var icon_color = IconColor(precision) ;
                 var m = L.marker([latitude,longitude], {
                   icon: icon_color
@@ -206,7 +205,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     blurredLocation: options.blurredLocation
   }
   options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
-  ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
+  let ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
   
   function getMarkersOfPrecision(precision){
     var locations_markers = return_locations_markers_array() ;

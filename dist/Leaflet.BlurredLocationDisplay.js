@@ -160,7 +160,6 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 if(typeof afterDecimal !== "undefined") {
                   precision = afterDecimal.length ;
                 }
-                
                 var icon_color = IconColor(precision) ;
                 var m = L.marker([latitude,longitude], {
                   icon: icon_color
@@ -217,7 +216,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     blurredLocation: options.blurredLocation
   }
   options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
-  ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
+  let ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
   
   function getMarkersOfPrecision(precision){
     var locations_markers = return_locations_markers_array() ;
@@ -298,8 +297,8 @@ module.exports = function Interface (options) {
 },{}],5:[function(require,module,exports){
 module.exports = function changeRectangleColor(options){
 
- var map = options.blurredLocation.map ;  
- var rectangles = [] ; 
+ let map = options.blurredLocation.map ;  
+ let rectangles = [] ; 
 
  function getColorCode(ctr){
     let color = '#ff0000' ;
@@ -434,7 +433,6 @@ module.exports = function changeRectangleColor(options){
 
      current_upper_lat = center_SW.lat - diff ; 
      while(current_upper_lat + diff >= map.getBounds().getSouthWest().lat){
-
 
       current_SW_lng = center_SW.lng ; 
       leftRectangles(map.getBounds().getSouthWest().lng , current_SW_lng , current_upper_lat + diff , current_upper_lat, diff) ;
