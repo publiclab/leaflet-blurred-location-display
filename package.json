@@ -39,7 +39,7 @@
     "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#feature_API_modifications"
   },
   "dependencies": {
-    "jquery": "^3.2.1",
+    "jquery": "^3.3.1",
     "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#feature_API_modifications",
     "map_module": "git://github.com/publiclab/leaflet-blurred-location.git#master"
   }
