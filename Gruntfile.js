@@ -37,8 +37,8 @@ module.exports = function(grunt) {
              'node_modules/jasmine-jquery/lib/jasmine-jquery.js' ,
              'node_modules/jasmine-ajax/lib/mock-ajax.js',
              'https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE',
+             'node_modules/leaflet/dist/leaflet-src.js',
              'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js' ,
-             'node_modules/leaflet/dist/leaflet-src.js'
              ]
           }
         },
