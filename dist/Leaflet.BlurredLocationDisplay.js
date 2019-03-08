@@ -19,6 +19,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.locations = options.locations || [] ;
   options.source_url = options.source_url || "" ;
   options.JSONparser = options.JSONparser || defaultJSONparser ;
+  options.zoom_filter = options.zoom_filter || [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;
 
   let map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
@@ -28,35 +29,28 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   require('./ui/iconColors.js') ;
 
   function filterCoordinate(lat , lng) {
-
       current_zoom = map.getZoom() ;
 
-      if(current_zoom >= 0 && current_zoom <=5){
-        // Show all markers 
-        return true ; 
+      for(let i=0 ; i < options.zoom_filter.length ; i++){
+        if(current_zoom >= options.zoom_filter[i][0] && current_zoom <= options.zoom_filter[i][1])
+        {
+          let afterDecimal = lat.toString().split(".")[1] ;
+          let precision = 0 ; 
+          if(typeof afterDecimal === "undefined") {
+            precision = 0 ; 
+          }
+          else{
+            precision = afterDecimal.length ;
+          }
+          if(precision >= options.zoom_filter[i][2]){
+            return true ;
+          }
+          else{
+            return false ; 
+          }
+        }
       }
-      else if(current_zoom >= 6 && current_zoom <=7){
-        // remove <= 1  precision level coordinates
-         afterDecimal = lat.toString().split(".")[1] ;
-         if(typeof afterDecimal !== "undefined" && afterDecimal.length > 1) {
-          return true ;
-         }
-      }
-      else if(current_zoom >= 8 && current_zoom <=10){
-        // remove <= 3 precision level coordinates
-         afterDecimal = lat.toString().split(".")[1] ;
-         if(typeof afterDecimal !== "undefined" && afterDecimal.length > 3) {
-          return true ;
-         }
-      }
-      else if(current_zoom >= 11 ){
-        // remove <= 4 precision level coordinates
-         afterDecimal = lat.toString().split(".")[1] ;
-         if(typeof afterDecimal !== "undefined" && afterDecimal.length > 4) {
-           return true ;
-         }
-      }
-      
+
       return false ;
   }
 

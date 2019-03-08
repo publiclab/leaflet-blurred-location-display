@@ -87,11 +87,15 @@
                    [24.123456 , 78.123456],
                    [25.123456 , 77.123456]];
 
+      // [lower zoom level , upper zoom level , >= precision allowed]
+      zoom_filter = [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;             
+
       var options_display = {
         blurredLocation: BlurredLocation,
         locations: locations,
         source_url: "https://publiclab.org/api/srch/nearbyPeople",
-        JSONparser: JSONparser
+        JSONparser: JSONparser,
+        zoom_filter: zoom_filter
       }
 
       var blurredLocationDisplay = new BlurredLocationDisplay(options_display);
