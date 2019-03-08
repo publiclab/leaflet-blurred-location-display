@@ -70,6 +70,22 @@ var options_display = {
 }
 ```
 
+##### Changing the zoom levels range where 'x' precision marker should be visible : 
+
+```js
+    // [lower zoom level , upper zoom level , >= precision allowed]
+      zoom_filter = [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;     
+```
+The first number signifies the lower zoom level . 
+
+The second number signifies the upper zoom level . 
+
+The last number signifies that all markers having precision greater than equal to this number should be shown .
+
+The default zoom level filter array is : 
+```js
+[[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;
+```
 ##### Using external API to fetch data
 
 ```js

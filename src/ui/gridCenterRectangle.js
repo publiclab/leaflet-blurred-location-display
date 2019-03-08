@@ -31,6 +31,7 @@ module.exports = function changeRectangleColor(options){
 
  function ColorRectangles()
   { 
+     // console.log(options.return_all_markers_map()) ;
       if(typeof options.blurredLocation.getRectangle() !== "undefined"){
         options.blurredLocation.getRectangle().remove() ; 
       }
@@ -48,25 +49,20 @@ module.exports = function changeRectangleColor(options){
 
   function calculateMarkersInsideRect(bounds)
   {
-    let locations = options.return_locations_markers_array() ;
-    let remote_locations = options.return_SourceUrl_markers_array() ;
+    let locations = options.return_all_markers_map() ;
     let ctr = 0 ; 
 
-    for(let i=0 ; i<locations.length ; i++){
-      let latitude = locations[i]._latlng.lat ; 
-      let longitude = locations[i]._latlng.lng ; 
-      if(latitude >= bounds[0][0] && latitude <= bounds[1][0] && longitude >= bounds[0][1] && longitude <= bounds[1][1]){
-        ctr++ ;
+    locations.forEach(function(value , key , map){
+      if(typeof(value._latlng) != "undefined"){
+        let latitude = value._latlng.lat ; 
+       // console.log(latitude) ; 
+        let longitude = value._latlng.lng ; 
+        if(latitude >= bounds[0][0] && latitude <= bounds[1][0] && longitude >= bounds[0][1] && longitude <= bounds[1][1]){
+          ctr++ ;
+        }
       }
-    }
-
-    for(let i=0 ; i<remote_locations.length ; i++){
-      let latitude = remote_locations[i]._latlng.lat ; 
-      let longitude = remote_locations[i]._latlng.lng ; 
-      if(latitude >= bounds[0][0] && latitude <= bounds[1][0] && longitude >= bounds[0][1] && longitude <= bounds[1][1]){
-        ctr++ ;
-      }
-    }
+    }) ;
+        
     return ctr ;
   }
 
