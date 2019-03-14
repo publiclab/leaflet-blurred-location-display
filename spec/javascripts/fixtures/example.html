@@ -4,15 +4,7 @@
 
     <title>Leaflet.BlurredLocationDisplay</title>
 
-    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    <script src="../../../node_modules/jquery/dist/jquery.min.js"></script>
-    <script src="../../../node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <link href="../../../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
-    <script src="../../../node_modules/leaflet/dist/leaflet.js"></script>
-    <script src="../../../node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js"></script>
-    <script src="../../../dist/Leaflet.BlurredLocationDisplay.js"></script>
-
+   
   </head>
 
   <body>
@@ -60,8 +52,18 @@
 
     </div>
 
+    <style>
+      html { background: #f8f8f8; margin-bottom: 100px;}
+      body { background: none; }
+    </style>
+
+
+  </body>
+
+
     <script>
-      var options1 = {
+     
+       var options1 = {
         mapID: 'map1'
       }
       var options2 = {
@@ -77,15 +79,8 @@
       var BlurredLocation2 = new BlurredLocation(options2) ;
 
       var BlurredLocation3 = new BlurredLocation(options3) ;
-      
-      /* 
-        zoom_level <= 5              :  7 Markers
-        zoom_level between 6 and 7   :  5 Markers 
-        zoom_level between 8 and 10  :  3 Markers 
-        zoom_level >= 11             :  2 Markers
-      */
-
-      var locations = [[23.1 ,      77.1],
+       
+       var locations = [[23.1 ,      77.1],
                    [20.1 ,      76.1],
                    [21.111 ,    76.111],
                    [22.111 ,    78.111],
@@ -96,30 +91,25 @@
       var options_display1 = {
         blurredLocation: BlurredLocation1,
         locations: locations
-      }
+      };
       var options_display2 = {
         blurredLocation: BlurredLocation2,
         locations: locations
-      }
+      };
       var options_display3 = {
         blurredLocation: BlurredLocation3,
         locations: locations
-      }
-
-      var blurredLocationDisplay1 = new BlurredLocationDisplay(options_display1);
+      };
+        
+    $(document).ready(function(){
+    
+      var blurredLocationDisplay1 = new BlurredLocationDisplay(options_display1);  
       var blurredLocationDisplay2 = new BlurredLocationDisplay(options_display2);
       var blurredLocationDisplay3 = new BlurredLocationDisplay(options_display3);
 
       BlurredLocation1.map.setView([23,77] , 5) ;
       BlurredLocation2.map.setView([23,77] , 6) ;
       BlurredLocation3.map.setView([24.23694700391752, 76.89880371093751] , 8) ;
+    }) ;
     </script>
-
-    <style>
-      html { background: #f8f8f8; margin-bottom: 100px;}
-      body { background: none; }
-    </style>
-
-
-  </body>
 </html>
