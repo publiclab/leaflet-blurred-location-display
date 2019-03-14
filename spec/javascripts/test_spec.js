@@ -1,10 +1,7 @@
 describe("Basic testing", function() {
   "use strict";
 
-    beforeEach(function(){
-        loadFixtures('example.html');
-    });
-
+ var fixture = loadFixtures('example.html');
 
   it("Basic Test", function () {
   expect(true).toBe(true);
