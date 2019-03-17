@@ -3,7 +3,10 @@
   <head>
 
     <title>Leaflet.BlurredLocationDisplay</title>
-   
+
+    <script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link href="../../../node_modules/leaflet/dist/leaflet.css" rel="stylesheet">
   </head>
 
   <body>
@@ -99,14 +102,14 @@
         blurredLocation: BlurredLocation3,
         locations: locations
       };
-    
-      var blurredLocationDisplay1 = new BlurredLocationDisplay(options_display1);  
-      var blurredLocationDisplay2 = new BlurredLocationDisplay(options_display2);
-      var blurredLocationDisplay3 = new BlurredLocationDisplay(options_display3);
+      
+      // var blurredLocationDisplay1 = new BlurredLocationDisplay(options_display1);    
+      // var blurredLocationDisplay2 = new BlurredLocationDisplay(options_display2);
+      // var blurredLocationDisplay3 = new BlurredLocationDisplay(options_display3);
 
-      BlurredLocation1.map.setView([23,77] , 5) ;
-      BlurredLocation2.map.setView([23,77] , 6) ;
-      BlurredLocation3.map.setView([24.23694700391752, 76.89880371093751] , 8) ;
+      // BlurredLocation1.map.setView([23,77] , 5) ;
+      // BlurredLocation2.map.setView([23,77] , 6) ;
+      // BlurredLocation3.map.setView([24.23694700391752, 76.89880371093751] , 8) ;
 
     </script>
 </html>
