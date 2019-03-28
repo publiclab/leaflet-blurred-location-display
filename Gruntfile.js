@@ -28,22 +28,17 @@ module.exports = function(grunt) {
         },
 
         jasmine: {
-          src: "dist/*.js",
+          src: ['dist/client/Leaflet.BlurredLocationDisplay.js'],
           options: {
             specs: "spec/javascripts/*spec.js",
             vendor: [
+             'dist/Leaflet.BlurredLocationDisplay.js',
              'node_modules/jquery/dist/jquery.js',
              'node_modules/bootstrap/dist/js/bootstrap.min.js',
              'node_modules/jasmine-jquery/lib/jasmine-jquery.js' ,
              'node_modules/jasmine-ajax/lib/mock-ajax.js',
              'https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE',
-             'node_modules/leaflet/dist/leaflet.js',
-             'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
-             'dist/Leaflet.BlurredLocationDisplay.js'
-             ],
-             styles: [
-             'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css',
-             'node_modules/leaflet/dist/leaflet.css'
+             'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js'
              ]
           }
         },

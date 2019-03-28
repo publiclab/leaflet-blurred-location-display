@@ -8,21 +8,20 @@ describe("Basic testing", function() {
   });
 
   it("Checks if at zoom level 5 , all 7 markers are shown", function () {
-    BlurredLocation1.map.setZoom(5);
     loadFixtures('example.html');
-    expect($("#map1").children()[0].childNodes[3].childNodes.length).toBe(0) ;
+    expect($("#map1").children()[0].childNodes[3].childNodes.length).toBe(7) ;
   });
 
   it("Checks if at zoom level 6 , only 5 markers are shown", function () {
   //  BlurredLocation2.map.setZoom(6);
     loadFixtures('example.html');
-    expect($("#map2").children()[0].childNodes[3].childNodes.length).toBe(0) ;
+    expect($("#map2").children()[0].childNodes[3].childNodes.length).toBe(5) ;
   });
 
   it("Checks if at zoom level 8 , only 3 markers are shown", function () {
     //BlurredLocation3.map.setZoom(8);
    loadFixtures('example.html');
-    expect($("#map3").children()[0].childNodes[3].childNodes.length).toBe(0) ;
+    expect($("#map3").children()[0].childNodes[3].childNodes.length).toBe(3) ;
   });
 
   it("maps are loaded", function () {
