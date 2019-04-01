@@ -36,7 +36,8 @@ module.exports = function(grunt) {
              'node_modules/bootstrap/dist/js/bootstrap.min.js',
              'node_modules/jasmine-jquery/lib/jasmine-jquery.js' ,
              'node_modules/jasmine-ajax/lib/mock-ajax.js',
-             'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js'
+             'node_modules/leaflet-blurred-location/dist/Leaflet.BlurredLocation.js',
+             'node_modules/leaflet-graticule/Leaflet.Graticule.js'
              ],
              summary: false,
              keepRunner: true,
