@@ -32,7 +32,7 @@
     "leaflet": "^1.4.0",
     "leaflet-graticule": "git://github.com/jywarren/Leaflet.Graticule.git#patch-1",
     "map_module": "git://github.com/publiclab/leaflet-blurred-location#master",
-    "matchdep": "^1.0.1",
+    "matchdep": "^2.0.0",
     "require": "^2.4.20",
     "resig-class": "^1.0.0",
     "leaflet-graticule": "git://github.com/jywarren/Leaflet.Graticule.git#patch-1",
