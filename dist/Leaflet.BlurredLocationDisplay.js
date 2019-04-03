@@ -388,7 +388,7 @@ module.exports = function changeRectangleColor(options){
      }
   }
 
-  // generated left row of rectangles starting from current_lng to left_lng !
+  // generated right row of rectangles starting from current_lng to right_lng !
   function rightRectangles(right_lng , current_lng , upper_lat , lower_lat , diff)
   {
     while(current_lng-diff <= right_lng){
@@ -422,7 +422,9 @@ module.exports = function changeRectangleColor(options){
      let current_SW_lng = center_SW.lng ; 
 
      let current_upper_lat = center_SW.lat ; 
-     while(current_upper_lat <= map.getBounds().getNorthEast().lng){
+
+     //console.log("1. current_upper_lat" , current_upper_lat) ;
+     while(current_upper_lat <= map.getBounds().getNorthEast().lat){
 
       current_SW_lng = center_SW.lng ; 
       leftRectangles(map.getBounds().getSouthWest().lng , current_SW_lng , current_upper_lat + diff , current_upper_lat, diff) ;
