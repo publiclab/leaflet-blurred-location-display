@@ -45,7 +45,12 @@
     </div>
 
     <script>
+
+      var map123 = L.map('map').setView([23,77] , 3) ;
+
       var options = {
+        mapID: 'map',
+        map: map123,
         InterfaceOptions: {
           latId: 'lat',
           lngId: 'lng'
@@ -95,7 +100,8 @@
         locations: locations,
         source_url: "https://publiclab.org/api/srch/nearbyPeople",
         JSONparser: JSONparser,
-        zoom_filter: zoom_filter
+        zoom_filter: zoom_filter,
+        color_code_markers: false // by default this is false .
       }
 
       var blurredLocationDisplay = new BlurredLocationDisplay(options_display);

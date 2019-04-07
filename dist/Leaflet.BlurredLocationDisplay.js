@@ -21,6 +21,8 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.JSONparser = options.JSONparser || defaultJSONparser ;
   options.zoom_filter = options.zoom_filter || [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;
 
+  options.color_code_markers = options.color_code_markers || false ;
+
   let map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
   InterfaceOptions.blurredLocation = options.blurredLocation;
@@ -87,6 +89,9 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   }
 
   function IconColor(precision){
+    if (options.color_code_markers === false) {
+      return new L.Icon.BlackIcon() ;
+    }
     if(precision === 0){
        return new L.Icon.BlueIcon() ;
     }
@@ -423,7 +428,6 @@ module.exports = function changeRectangleColor(options){
 
      let current_upper_lat = center_SW.lat ; 
 
-     //console.log("1. current_upper_lat" , current_upper_lat) ;
      while(current_upper_lat <= map.getBounds().getNorthEast().lat){
 
       current_SW_lng = center_SW.lng ; 
