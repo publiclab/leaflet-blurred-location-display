@@ -266,38 +266,22 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   let ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
   
   function getMarkersOfPrecision(precision){
-    var locations_markers = return_locations_markers_array() ;
-    var sourceurl_markers = return_SourceUrl_markers_array() ; 
 
-    var filtered_locations_markers = [] ;
-    var filtered_sourceurl_markers = [] ;
+    var visibleLocations = getVisibleLocations() ;
+    var filtered_markers = [] ;
 
-    for(i=0 ; i < locations_markers.length ; i++){
-      let after_decimal = locations_markers[i]._latlng.lat.toString().split(".")[1] ;
+    for(let i=0 ; i < visibleLocations.length ; i++){
+      let after_decimal = visibleLocations[i].lat.toString().split(".")[1] ;
       let precision_of_marker = 0 ; 
       if(typeof after_decimal !== "undefined") {
           precision_of_marker = after_decimal.length ;
       }
       if(precision_of_marker === precision){
-        filtered_locations_markers[filtered_locations_markers.length] = locations_markers[i] ; 
+        filtered_markers[filtered_markers.length] = visibleLocations[i] ; 
       }
     }
-
-    for(i=0 ; i < sourceurl_markers.length ; i++){
-      let after_decimal = sourceurl_markers[i]._latlng.lat.toString().split(".")[1] ;
-      let precision_of_marker = 0 ; 
-      if(typeof after_decimal !== "undefined") {
-          precision_of_marker = after_decimal.length ;
-      }
-      if(precision_of_marker === precision){
-        filtered_sourceurl_markers[filtered_sourceurl_markers.length] = sourceurl_markers[i] ; 
-      }
-    }
-
-    return {
-      filtered_locations_markers: filtered_locations_markers,
-      filtered_sourceurl_markers: filtered_sourceurl_markers
-    }
+    
+    return filtered_markers ;
   }
 
   function filterCoordinatesToPrecison(precision)
