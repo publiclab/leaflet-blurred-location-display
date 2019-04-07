@@ -44,8 +44,9 @@ module.exports = function changeRectangleColor(options){
       drawFullHeatMap() ;
     } 
   }
-
-  ColorRectangles() ; 
+  if(options.style === 'heatmap' || options.style === 'both'){
+    ColorRectangles() ; 
+  }
 
   function calculateMarkersInsideRect(bounds)
   {

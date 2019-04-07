@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
 
-    <title>Index Leaflet.BlurredLocationDisplay</title>
+    <title>Simple Heatmap Style</title>
 
     <script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&key=AIzaSyDWgc7p4WWFsO3y0MTe50vF4l4NUPcPuwE"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -21,8 +21,7 @@
 
       <h1>Leaflet BlurredLocationDisplay <small>| by <a href="">Public Lab</a></small></h1>
 
-      <p>This library is designed to allow locations to be displayed but with a degree of "blur" -- obscuring exact location in cases where some privacy is needed. Locations are represented as latitude and longitude, but truncated to a precision as indicated by the highlighted region on the map shown. <a href="https://github.com/publiclab/leaflet-blurred-location-display">Leaflet.BlurredLocationDisplay</a> is open source, and was created as part of a <a href="http://summerofcode.withgoogle.com">Google Summer of Code project</a> by <a href="https://github.com/mridulnagpal">Mridul Nagpal</a>.</p>
-
+      <p>This library is designed to allow locations to be displayed but with a degree of "blur" -- obscuring exact location in cases where some privacy is needed. Locations are represented as latitude and longitude, but truncated to a precision as indicated by the highlighted region on the map shown. <a href="https://github.com/publiclab/leaflet-blurred-location-display">Leaflet.BlurredLocationDisplay</a> This page shows the <i>style : heatmap </i> property of this library which results in only colored grids without any markers .
       <hr />
 
       <p>
@@ -102,7 +101,7 @@
         JSONparser: JSONparser,
         zoom_filter: zoom_filter,
         color_code_markers: false, // by default this is false .
-        style: 'both' // or 'heatmap' or 'markers' , by default is 'both'
+        style: 'heatmap' // or 'both' or 'markers'
       }
 
       var blurredLocationDisplay = new BlurredLocationDisplay(options_display);

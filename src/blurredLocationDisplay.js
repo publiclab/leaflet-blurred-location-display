@@ -11,6 +11,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.zoom_filter = options.zoom_filter || [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;
 
   options.color_code_markers = options.color_code_markers || false ;
+  options.style = options.style || 'both' ;
 
   let map = options.blurredLocation.map ;
   var InterfaceOptions = options.InterfaceOptions || {};
@@ -116,7 +117,9 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
               var icon_color = IconColor(precision) ;
               var m = L.marker([latitude, longitude] , {icon: icon_color}) ; 
               all_markers_map.set(i , m) ; 
-              m.addTo(map).bindPopup("Precision : " + precision) ;
+              if(options.style === 'markers' || options.style === 'both'){
+                m.addTo(map).bindPopup("Precision : " + precision) ;
+              }
               locations_markers_array[locations_markers_array.length] = m ;
         }
       } 
@@ -156,11 +159,15 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 }) ;
                 SourceUrl_id_map.set(id , m) ;
                 all_markers_map.set(id , m) ;
-                m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
+                if(options.style === 'markers' || options.style === 'both'){
+                  m.addTo(map).bindPopup("<a href=" + url + ">" + title + "</a> <br> Precision : " + precision) ;
+                }
                 SourceUrl_markers_array[SourceUrl_markers_array.length] = m ;  
               }  
             }
-            ColorRectangles() ;
+            if(options.style === 'heatmap' || options.style === 'both'){
+              ColorRectangles() ;
+            }
       });  
     }
   }
@@ -185,7 +192,9 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       markers_array = removeAllMarkers(markers_array) ;
       m_array.length = 0 ;
       fetchData(true) ; 
-      ColorRectangles() ;
+      if(options.style === 'heatmap' || options.style === 'both'){
+        ColorRectangles() ;
+      }
     }) ;
 
     map.on('moveend' , function () {
@@ -194,7 +203,9 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       markers_array = removeAllMarkers(markers_array) ;
       m_array.length = 0 ;
       fetchData(true) ; 
-      ColorRectangles() ;
+      if(options.style === 'heatmap' || options.style === 'both'){
+        ColorRectangles() ;
+      }
     }) ;
   }
 
@@ -210,7 +221,8 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     return_locations_markers_array: return_locations_markers_array,
     return_SourceUrl_markers_array: return_SourceUrl_markers_array,
     return_all_markers_map: return_all_markers_map,
-    blurredLocation: options.blurredLocation
+    blurredLocation: options.blurredLocation,
+    style: options.style
   }
   options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
   let ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
