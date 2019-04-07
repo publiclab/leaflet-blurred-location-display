@@ -258,15 +258,28 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
     var visibleLocations = getVisibleLocations() ;
     var filtered_markers = [] ;
-
-    for(let i=0 ; i < visibleLocations.length ; i++){
-      let after_decimal = visibleLocations[i].lat.toString().split(".")[1] ;
-      let precision_of_marker = 0 ; 
-      if(typeof after_decimal !== "undefined") {
+    if(typeof precision === "object"){
+      for(let i=0 ; i < visibleLocations.length ; i++){
+        let after_decimal = visibleLocations[i].lat.toString().split(".")[1] ;
+        let precision_of_marker = 0 ; 
+        if(typeof after_decimal !== "undefined") {
           precision_of_marker = after_decimal.length ;
-      }
-      if(precision_of_marker === precision){
-        filtered_markers[filtered_markers.length] = visibleLocations[i] ; 
+        }
+        if(precision_of_marker >= precision.min && precision_of_marker <= precision.max){
+          filtered_markers[filtered_markers.length] = visibleLocations[i] ; 
+        }
+      }  
+    } 
+    else{
+      for(let i=0 ; i < visibleLocations.length ; i++){
+        let after_decimal = visibleLocations[i].lat.toString().split(".")[1] ;
+        let precision_of_marker = 0 ; 
+        if(typeof after_decimal !== "undefined") {
+            precision_of_marker = after_decimal.length ;
+        }
+        if(precision_of_marker === precision){
+         filtered_markers[filtered_markers.length] = visibleLocations[i] ; 
+        }
       }
     }
     
