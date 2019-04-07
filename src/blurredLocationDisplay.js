@@ -8,7 +8,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   options.locations = options.locations || [] ;
   options.source_url = options.source_url || "" ;
   options.JSONparser = options.JSONparser || defaultJSONparser ;
-  options.zoom_filter = options.zoom_filter || [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;
+  options.zoom_filter = options.zoom_filter || [[0,5,0] , [5,7,2] , [8,10,4] , [11,18,5]] ;
 
   options.color_code_markers = options.color_code_markers || false ;
   options.style = options.style || 'both' ;
@@ -63,10 +63,10 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       return parsed_data ;   
   }
 
-  var all_markers_map = new Map() ; 
-  var locations_markers_array = [] ;
-  var SourceUrl_markers_array = [] ;
-  var SourceUrl_id_map = new Map() ; 
+  var all_markers_map = new Map() ; // passed to gridCenterRectangle --- contains all markers fetched till now !  
+  var locations_markers_array = [] ; 
+  var SourceUrl_markers_array = [] ; // contains currently visible markers on map only !                            
+  var SourceUrl_id_map = new Map() ; // separate hash map because 'ids' of locations_markers and SourceURL array may be same .
 
   function removeAllMarkers(markers_array) {
     for(i in markers_array){
@@ -172,16 +172,45 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     }
   }
 
+  // We need these functions to know the markers currently visible on the map .
+  // We need different arrays here to avoid RACE CONDITION between different listerners !
   function return_locations_markers_array(){
     return locations_markers_array ; 
   }
-
   function return_SourceUrl_markers_array(){
     return SourceUrl_markers_array ; 
   }
 
+  // contains all markers fetched till now !  
   function return_all_markers_map(){
     return all_markers_map ; 
+  }
+
+  function getVisibleLocations()
+  {
+    var locations_markers = return_locations_markers_array() ;
+    var sourceurl_markers = return_SourceUrl_markers_array() ; 
+    var visibleLocations = [] ;
+
+    for(let i=0 ; i<locations_markers.length ; i++){
+      var location = {
+        lat: locations_markers[i]._latlng.lat ,
+        lng: locations_markers[i]._latlng.lng ,
+        source: 'local'
+      } ;
+      visibleLocations[visibleLocations.length] = location ;
+    }
+
+    for(let i=0 ; i<sourceurl_markers.length ; i++){
+      var location = {
+        lat: sourceurl_markers[i]._latlng.lat ,
+        lng: sourceurl_markers[i]._latlng.lng ,
+        source: 'remote'
+      } ;
+      visibleLocations[visibleLocations.length] = location ;
+    }
+    
+    return visibleLocations ;
   }
 
   function activate_listeners(return_markers_array , fetchData)
@@ -218,8 +247,6 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   }
 
   let rectangle_options = {
-    return_locations_markers_array: return_locations_markers_array,
-    return_SourceUrl_markers_array: return_SourceUrl_markers_array,
     return_all_markers_map: return_all_markers_map,
     blurredLocation: options.blurredLocation,
     style: options.style
@@ -281,9 +308,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
   }
 
   return {
-    all_markers_map: return_all_markers_map,
-    locations_markers_array: return_locations_markers_array ,
-    SourceUrl_markers_array: return_SourceUrl_markers_array,
+    getVisibleLocations: getVisibleLocations,
     removeAllMarkers: removeAllMarkers,
     Interface: Interface,
     getMarkersOfPrecision: getMarkersOfPrecision, 
