@@ -10,7 +10,7 @@ leaflet-blurred-location-display is an extension of leaflet-blurred-location and
 * Color code the markers on the map according to the precision.
 * Fetches data from remote API or you may pass array of coordinates directly into LBLD API (see example below)
 
-## Demo
+# Demo
 
 1. See how markers are filtered at different zoom levels : 
 https://publiclab.github.io/leaflet-blurred-location-display/examples/example.html
@@ -28,12 +28,12 @@ https://publiclab.github.io/leaflet-blurred-location-display/examples/index.html
 |   5        |      Grey    	 |
 |   >=6      |      Yellow   	 |
 
-## Setting up leaflet-blurred-location-display
+# Setting up leaflet-blurred-location-display
 
 To set up the library first clone this repo to your local after that run 'npm install' to install all the neccessary packages required.
 
 
-## Some terms used
+# Some terms used
 
 * LBLD = leaflet-blurred-location-display .
 * LBL = leaflet-blurred-location
@@ -43,50 +43,75 @@ To set up the library first clone this repo to your local after that run 'npm in
 * JSONparser = a function defined by User to parse external API .
 * zoom_level = the current zoom level of the map .
 
-## Options 
+# Options 
 
-### Basic
+## Basic
 
-##### Define the LBL object
+#### Define standard leaflet map object :
+
+     var map123 = L.map('map').setView([23,77] , 3) ; // There should be a div with id = 'map' .
+
+#### Define the LBL object :
 
 See https://github.com/publiclab/leaflet-blurred-location for more details 
      
-     var BlurredLocation = new BlurredLocation(options);
+     var BlurredLocation = new BlurredLocation();
+     blurredLocation.addTo(map123) ;
+     
+#### Define LBLD object : 
+    
+     var blurredLocationDisplay = new BlurredLocationDisplay(options_display) ;
+     
+You need to pass some LBLD settings in the `options_display` object above , which are explained in the next section :
 
-##### Passing Coordinates directly into the LBLD API
+##### Various fields in `options_display` : 
+
+```js
+ var options_display = {
+        blurredLocation: BlurredLocation,
+        locations: locations,
+        source_url: "https://publiclab.org/api/srch/nearbyPeople",
+        JSONparser: JSONparser,
+        zoom_filter: zoom_filter,
+        color_code_markers: false, // by default this is false .
+        style: 'both' // or 'heatmap' or 'markers' , by default is 'both'
+ }
+```
+
+*    `blurredLocation` : This is compulsory field , you have to pass the LBL object here .
+*    `locations` : You can pass some local data directly to LBLD API in the form of array .
+*    `source_url`: URL to external API to fetch data and show on map .
+*    `JSONparser`: JSON parser function for your API URL provided .
+*    `zoom_filter` : An array signifying the range of zoom levels where particular precision markers should be visible .
+*    `color_code_markers` : If `true` , then markers would be color coded according to the precision of its coordinates . 
+*    `style` : can be `both` where markers and heatmap both are drawn , `markers` for showing only markers and `heatmap` for                showing  only heatmap .
+
+All these parameters are explained in detail below : 
+
+#### There are 2 ways to show data using LBLD : 
+*  Pass the data directly to LBLD object locally . 
+*  Pass the URL of JSON data and a custom JSON parser function .
+
+##### 1.) Passing Coordinates directly into the LBLD API :
+
+First, you need to make some blurred locations. Let's create 3 of them :
 
 ```js
 locations = [[23.1 ,      77.1],
              [20.1 ,      76.1],
-             [21.111 ,    76.111],
-             [22.111 ,    78.111],
-             [23.1234 ,   76.1234],
-             [24.123456 , 78.123456],
-             [25.123456 , 77.123456]];
+             [21.111 ,    76.111];
+```
+Now you can pass them to the `options_display` object as following : 
 
+```
 var options_display = {
   blurredLocation: BlurredLocation, // compulsory to pass
   locations: locations
 }
 ```
+##### 2.) Using external API to fetch data :
 
-##### Changing the zoom levels range where 'x' precision marker should be visible : 
-
-```js
-    // [lower zoom level , upper zoom level , >= precision allowed]
-      zoom_filter = [[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;     
-```
-The first number signifies the lower zoom level . 
-
-The second number signifies the upper zoom level . 
-
-The last number signifies that all markers having precision greater than equal to this number should be shown .
-
-The default zoom level filter array is : 
-```js
-[[0,5,0] , [5,6,2] , [8,10,4] , [11,18,5]] ;
-```
-##### Using external API to fetch data
+Pass the URL in the `source_url` field and a JSON parser function for your API (you can take a look at the default JSON parser below to make your own !) .
 
 ```js
 var options_display = {
@@ -100,7 +125,7 @@ var options_display = {
     1. Make an array of object.
     2. Each object should have same parameters - `id`, `url`, `latitude`, `longitude`, `title`.
     3. All the above parameters are used to make pop-up of each marker.
-    4. The below is also the default JSONparser which will be used automatically.
+    4. The below is also the default JSONparser which will be used automatically if you do not provide your own .
 
 ```js
 function JSONparser(data) {
@@ -122,7 +147,37 @@ function JSONparser(data) {
 
 **[NOTE: We can use external API and also pass local data simultaneously !]
 
-## API
+
+#### Changing the zoom levels range where 'x' precision marker should be visible : 
+
+```js
+    // [lower zoom level , upper zoom level , >= precision allowed]
+      zoom_filter = [[0,5,0] , [5,7,2] , [8,10,4] , [11,18,5]] ;     
+```
+The first number signifies the lower zoom level . 
+
+The second number signifies the upper zoom level . 
+
+The last number signifies that all markers having precision greater than equal to this number should be shown between lower zoom level and upper zoom level range .
+
+The default zoom level filter array is : 
+```js
+[[0,5,0] , [5,7,2] , [8,10,4] , [11,18,5]] ;
+```
+
+#### Style parameter : 
+
+1.) style = `heatmap` shows only heatmap on map : 
+![heatmap](https://user-images.githubusercontent.com/14952645/55791553-5e207080-5adc-11e9-89f8-5df6eaf63965.png)
+
+2.) style = `markers` shows only markers on map .
+![markers](https://user-images.githubusercontent.com/14952645/55819532-9ba1ef80-5b16-11e9-8f38-1276f5d4f046.png)
+
+3.) style = `both` shows both heatmap and markers on map :
+![both](https://publiclab.org/i/30983.png)
+
+
+# API
 
 | Methods         | Use                | Usage (Example)|
 |-----------------|--------------------|----------------|
@@ -132,7 +187,7 @@ function JSONparser(data) {
 |`filterCoordinatesToPrecison(int)`       | returns array of input coordinates with precision = (int) |`blurredLocationDisplay.filterCoordinatesToPrecison(2) //This would return array of coordinates with precision = 2 only `|
 
 
-## Features
+# Features
 
 | Feature         | Use                                                        |
 |-----------------|------------------------------------------------------------|
