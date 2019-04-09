@@ -61,7 +61,7 @@ See https://github.com/publiclab/leaflet-blurred-location for more details
      
 You need to pass some LBLD settings in the `options_display` object above , which are explained in the next section :
 
-##### Various fields in `options_display` : 
+#### Various fields in `options_display` : 
 
 ```js
  var options_display = {
@@ -145,7 +145,7 @@ function JSONparser(data) {
 **[NOTE: We can use external API and also pass local data simultaneously !]
 
 
-#### Changing the zoom levels range where 'x' precision marker should be visible : 
+#### `zoom_filter` : Changing the zoom levels range where 'x' precision marker should be visible : 
 
 ```js
     // [lower zoom level , upper zoom level , >= precision allowed]
@@ -219,8 +219,8 @@ Zoom level | Lat/lon coordinate precision | Human-readable placename
 
 # API
 
-| Methods         | Use                | Usage (Example)|
-|-----------------|--------------------|----------------|
+| Methods         | Use                    | Usage (Example)|
+|-----------------|------------------------|----------------|
 |`getVisibleLocations()`       | returns array of markers of the input coordinates currently on map ! .|  `blurredLocationDisplay.getVisibleLocations() //This would return the array of all the input coordinates currently visible on map`|
 |`getMarkersOfPrecision({min: int , max: int})`        |returns array - with source parameter indicating either `remote` or `local` marker with precision between `min` and `max` value {all markers are currently visible on map} . |`blurredLocationDisplay.getMarkersOfPrecision({min: 2 , max: 3}) //This would return 1 array - remote markers array and local markers array - having precision between 2 and 3`|
 |`getMarkersOfPrecision(int)`       | returns array - with source parameter indicating either `remote` or `local` marker {all markers are currently visible on map} |`blurredLocationDisplay.getMarkersOfPrecision(2) //This would return 1 array - remote markers array and local markers array - having precision = 2 `|
@@ -305,9 +305,8 @@ To add new tests, edit the `*_spec.js` files in `/spec/javascripts/`.
 
 Help improve Public Lab software!
 
-* Join the 'plots-dev@googlegroups.com' discussion list to get involved
-* Look for open issues at https://github.com/publiclab/leaflet-blurred-location/issues
-* We're specifically asking for help with issues labelled with [help-wanted](https://github.com/publiclab/leaflet-blurred-location/labels/help-wanted) tag
+* Look for open issues at https://github.com/publiclab/leaflet-blurred-location-display/issues
+* We're specifically asking for help with issues labelled with [help-wanted](https://github.com/publiclab/leaflet-blurred-location-display/labels/help-wanted) tag
 * Find lots of info on contributing at http://publiclab.org/wiki/developers
 * Review specific contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
 * Some devs hang out in http://publiclab.org/chat (irc webchat)
