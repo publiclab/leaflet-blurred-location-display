@@ -23,6 +23,12 @@ https://publiclab.github.io/leaflet-blurred-location-display/examples/example.ht
 2. See how markers are fetched from remote/external API : 
 https://publiclab.github.io/leaflet-blurred-location-display/examples/index.html
 
+3. This page shows how different zoom levels and different precisons corresponds to different Human Readable blurring :
+https://publiclab.github.io/leaflet-blurred-location-display/examples/HumanReadableBlurring.html
+
+4. This page shows the style : heatmap property of this library which results in only colored grids without any markers : 
+https://publiclab.github.io/leaflet-blurred-location-display/examples/simpleHeatmapStyle.html
+
 
 # Setting up leaflet-blurred-location-display
 
