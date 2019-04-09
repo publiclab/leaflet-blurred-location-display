@@ -3,6 +3,11 @@ leaflet-blurred-location-display (LBLD)
 
 [![Build Status](https://travis-ci.org/publiclab/leaflet-blurred-location-display.svg)](https://travis-ci.org/publiclab/leaflet-blurred-location-display)
 
+[![npm version](https://badge.fury.io/js/leaflet.blurred-location-display.svg)](https://badge.fury.io/js/leaflet.blurred-location-display)
+
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+
+[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
 leaflet-blurred-location-display is an extension of leaflet-blurred-location and does the following:
 
@@ -283,4 +288,32 @@ If number of markers are in range [36,45] , the color is : #FF0000
 If number of markers are greater than 45 , the color is :#8B0000
 
 NOTE : Clicking on each rectangle shows the pop-up showing number of markers in that rectangle .
+
+
+## Testing
+
+Automated tests are an essential way to ensure that new changes don't break existing functionality, and can help you be confident that your code is ready to be merged in. We use Jasmine for testing: https://jasmine.github.io/2.4/introduction.html
+
+To run tests, open /test.html in a browser. If you have phantomjs installed, you can run `grunt jasmine` to run tests on the commandline.
+
+You can find the installation instructions for phantomjs in its official [build documentation](http://phantomjs.org/build.html). For Ubuntu/debian based system you can follow [these instructions](https://gist.github.com/julionc/7476620) or use the script mentioned there.
+
+To add new tests, edit the `*_spec.js` files in `/spec/javascripts/`.
+
+## Developers
+
+Help improve Public Lab software!
+
+* Join the 'plots-dev@googlegroups.com' discussion list to get involved
+* Look for open issues at https://github.com/publiclab/leaflet-blurred-location/issues
+* We're specifically asking for help with issues labelled with [help-wanted](https://github.com/publiclab/leaflet-blurred-location/labels/help-wanted) tag
+* Find lots of info on contributing at http://publiclab.org/wiki/developers
+* Review specific contributor guidelines at http://publiclab.org/wiki/contributing-to-public-lab-software
+* Some devs hang out in http://publiclab.org/chat (irc webchat)
+* Join our gitter chat at https://gitter.im/publiclab/publiclab
+
+## First Time?
+
+New to open source/free software? Here is a selection of issues we've made especially for first-timers. We're here to help, so just ask if one looks interesting : https://github.com/publiclab/eaflet-blurred-location-display/labels/first-timers-only
+
 
