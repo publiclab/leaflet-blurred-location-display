@@ -28,6 +28,7 @@ https://publiclab.github.io/leaflet-blurred-location-display/examples/index.html
 
 To set up the library first clone this repo to your local after that run 'npm install' to install all the neccessary packages required.
 
+Link to npm : https://www.npmjs.com/package/leaflet.blurred-location-display
 
 # Some terms used
 
@@ -220,9 +221,9 @@ Zoom level | Lat/lon coordinate precision | Human-readable placename
 
 | Methods         | Use                | Usage (Example)|
 |-----------------|--------------------|----------------|
-|`locations_markers_array()`       | returns array of markers of the input coordinates currently on map ! .|  `blurredLocationDisplay.locations_markers_array() //This would return the array of all the input coordinates currently visible on map`|
-|`SourceUrl_markers_array()`       | returns array of markers of the remote coordinates(from some API) currently on map ! |`blurredLocationDisplay.SourceUrl_markers_array() //This would return the array of all the coordinates(fetched from API) currently visible on map`|
-|`getMarkersOfPrecision(int)`       | returns object of 2 arrays - one is the array of location/local markers and other is array of remote markers having precision = (int) {all markers are currently visible on map} |`blurredLocationDisplay.getMarkersOfPrecision(2) //This would return 2 arrays - remote markers array and local markers array - having precision = 2 `|
+|`getVisibleLocations()`       | returns array of markers of the input coordinates currently on map ! .|  `blurredLocationDisplay.getVisibleLocations() //This would return the array of all the input coordinates currently visible on map`|
+|`getMarkersOfPrecision({min: int , max: int})`        |returns array - with source parameter indicating either `remote` or `local` marker with precision between `min` and `max` value {all markers are currently visible on map} . |`blurredLocationDisplay.getMarkersOfPrecision({min: 2 , max: 3}) //This would return 1 array - remote markers array and local markers array - having precision between 2 and 3`|
+|`getMarkersOfPrecision(int)`       | returns array - with source parameter indicating either `remote` or `local` marker {all markers are currently visible on map} |`blurredLocationDisplay.getMarkersOfPrecision(2) //This would return 1 array - remote markers array and local markers array - having precision = 2 `|
 |`filterCoordinatesToPrecison(int)`       | returns array of input coordinates with precision = (int) |`blurredLocationDisplay.filterCoordinatesToPrecison(2) //This would return array of coordinates with precision = 2 only `|
 
 
