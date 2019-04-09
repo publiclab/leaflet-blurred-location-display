@@ -18,15 +18,6 @@ https://publiclab.github.io/leaflet-blurred-location-display/examples/example.ht
 2. See how markers are fetched from remote/external API : 
 https://publiclab.github.io/leaflet-blurred-location-display/examples/index.html
 
-| Precision  |  Color of marker  |
-|------------|-------------------|
-|	0		 |		Blue		 |
-|	1		 |		Red			 |
-|	2		 |		Orange		 |
-|	3		 |		Green		 |
-|	4		 |		Black	     |
-|   5        |      Grey    	 |
-|   >=6      |      Yellow   	 |
 
 # Setting up leaflet-blurred-location-display
 
@@ -176,6 +167,28 @@ The default zoom level filter array is :
 3.) style = `both` shows both heatmap and markers on map :
 ![both](https://publiclab.org/i/30983.png)
 
+#### Markers color coding parameter : 
+
+We can switch on the markers color coding feature which colors the markers according to the precision of its coordinates using `color_code_markers` parameter which is by default `false` .
+
+The following table is used for color coding : 
+
+| Precision  |  Color of marker  |
+|------------|-------------------|
+|	0		 |		Blue		 |
+|	1		 |		Red			 |
+|	2		 |		Orange		 |
+|	3		 |		Green		 |
+|	4		 |		Black	     |
+|   5        |      Grey    	 |
+|   >=6      |      Yellow   	 |
+
+*    When `color_code_markers` set to `true` : 
+  ![true](https://user-images.githubusercontent.com/14952645/55820032-c3458780-5b17-11e9-8537-a54b4ec4212d.png)
+
+
+*    When `color_code_markers` set to `false` : 
+  ![false](https://user-images.githubusercontent.com/14952645/55820014-baed4c80-5b17-11e9-8c86-fa3b462a4b33.png)   
 
 # API
 
