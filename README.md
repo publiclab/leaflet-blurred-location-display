@@ -138,3 +138,60 @@ function JSONparser(data) {
 |-----------------|------------------------------------------------------------|
 | **'Blurred' location display** | Your exact location won't be posted, only the grid square it falls within will be shown till the level of precision you have set to your location.|
 | **'Blurred' human-readable location display** | The name of the location you added will be displayed till the level of precision you set as the extent of address depends on the precision level you currently are on. For instance for precision 0 only the country name will be provided as you zoom in precision will increase and so will the address details, such as state, city, etc. |
+
+
+
+#### 1.) Lower the precision , Greater the privacy :
+
+The red markers corresponds to coordinates \[23.1 , 77.1\] , \[20.1 , 76.1\] having precision of 1 . At lower zoom level 5\*\*\*\* , these red markers are visible on map . ![image description](https://publiclab.org/i/30975.png)
+
+But as you zoom in to level 6 , these red markers are removed from the map whereas other high precision markers are still visible .  
+![image description](https://publiclab.org/i/30976.png)
+
+#### 2.) Color Coding of the markers :
+
+According to the precision of the coordinates , different colors are given to the markers .
+
+Precision = 0 , Blue colored markers .
+
+Precision = 1 , Red colored markers .
+
+Precision = 2 , Orange colored markers .
+
+Precision = 3 , Green colored markers .
+
+Precision = 4 , Black colored markers .
+
+Precision = 5 , Grey colored markers .
+
+Precision \>= 6 , Yellow colored markers .
+
+Also clicking the markers shows a pop-up telling the precision :  
+![image description](https://publiclab.org/i/30981.png)
+
+---------
+
+#### 3.) Heat map :
+
+**Greater the markers in a region , Darker the color .**
+
+We wanted to give an easy visualization power , so we implemented this grid heat map .
+
+![image description](https://publiclab.org/i/30983.png)
+
+The default color of grid is : #F3F0C0
+
+If number of markers are in range [1,10] , the color is : #FFA500
+
+If number of markers are in range [11,15] , the color is : #faff05
+
+If number of markers are in range [16,25] , the color is : #FF6347
+
+If number of markers are in range [26,35] , the color is : #FF4500
+
+If number of markers are in range [36,45] , the color is : #FF0000
+
+If number of markers are greater than 45 , the color is :#8B0000
+
+NOTE : Clicking on each rectangle shows the pop-up showing number of markers in that rectangle .
+
