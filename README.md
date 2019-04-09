@@ -143,7 +143,7 @@ function JSONparser(data) {
 
 ```js
     // [lower zoom level , upper zoom level , >= precision allowed]
-      zoom_filter = [[0,5,0] , [5,7,2] , [8,10,4] , [11,18,5]] ;     
+      zoom_filter = [[0,4,0] , [5,7,2] , [8,11,4] , [12,18,5]] ;             
 ```
 The first number signifies the lower zoom level . 
 
@@ -153,18 +153,21 @@ The last number signifies that all markers having precision greater than equal t
 
 The default zoom level filter array is : 
 ```js
-[[0,5,0] , [5,7,2] , [8,10,4] , [11,18,5]] ;
+zoom_filter = [[0,4,0] , [5,7,2] , [8,11,4] , [12,18,5]] ;             
 ```
 
 #### Style parameter : 
 
 1.) style = `heatmap` shows only heatmap on map : 
+
 ![heatmap](https://user-images.githubusercontent.com/14952645/55791553-5e207080-5adc-11e9-89f8-5df6eaf63965.png)
 
-2.) style = `markers` shows only markers on map .
+2.) style = `markers` shows only markers on map :
+
 ![markers](https://user-images.githubusercontent.com/14952645/55819532-9ba1ef80-5b16-11e9-8f38-1276f5d4f046.png)
 
 3.) style = `both` shows both heatmap and markers on map :
+
 ![both](https://publiclab.org/i/30983.png)
 
 #### Markers color coding parameter : 
@@ -184,11 +187,29 @@ The following table is used for color coding :
 |   >=6      |      Yellow   	 |
 
 *    When `color_code_markers` set to `true` : 
+
   ![true](https://user-images.githubusercontent.com/14952645/55820032-c3458780-5b17-11e9-8537-a54b4ec4212d.png)
 
 
 *    When `color_code_markers` set to `false` : 
+
   ![false](https://user-images.githubusercontent.com/14952645/55820014-baed4c80-5b17-11e9-8c86-fa3b462a4b33.png)   
+
+# Human-readable blurring : 
+
+Given `zoom_filter = [[0,4,0] , [5,7,2] , [8,11,4] , [12,18,5]] ;` ,
+
+Our table to correlate zoom level, precision, and human-readable scale (from "country" to "building") is as follows:
+
+Zoom level | Lat/lon coordinate precision | Human-readable placename
+--|----|---
+0 | `>= 0` | planet
+3 | `>= 0` | country
+4 | `>= 0` | country , state
+5 | `>= 2` | country , state , province
+6 | `>= 2` | country , state , province , region
+11 | `>= 4` | neighbourhood
+13 | `>= 5` | Exact Block
 
 # API
 
