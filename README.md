@@ -1,18 +1,13 @@
 leaflet-blurred-location-display (LBLD)
 ====
 
-[![Build Status](https://travis-ci.org/publiclab/leaflet-blurred-location-display.svg)](https://travis-ci.org/publiclab/leaflet-blurred-location-display)
+[![Build Status](https://travis-ci.org/publiclab/leaflet-blurred-location-display.svg)](https://travis-ci.org/publiclab/leaflet-blurred-location-display) [![npm version](https://badge.fury.io/js/leaflet.blurred-location-display.svg)](https://badge.fury.io/js/leaflet.blurred-location-display) [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0) [![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
 
-[![npm version](https://badge.fury.io/js/leaflet.blurred-location-display.svg)](https://badge.fury.io/js/leaflet.blurred-location-display)
+`leaflet-blurred-location-display` is an extension of `leaflet-blurred-location` and does the following:
 
-[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
-
-[![js-standard-style](https://img.shields.io/badge/code%20style-standard-brightgreen.svg)](http://standardjs.com)
-
-leaflet-blurred-location-display is an extension of leaflet-blurred-location and does the following:
-
-* Cleverly dispays your location, keeping your privacy settings in mind.
-* Color code the markers on the map according to the precision.
+* Cleverly dispays "blurred" locations, keeping privacy settings in mind.
+* Presents collections of blurred locations in a heatmap.
+* Optionally color codes the markers on the map according to the precision.
 * Fetches data from remote API or you may pass array of coordinates directly into LBLD API (see example below)
 
 # Demo
@@ -38,13 +33,13 @@ Link to npm : https://www.npmjs.com/package/leaflet.blurred-location-display
 
 # Some terms used
 
-* LBLD = leaflet-blurred-location-display .
-* LBL = leaflet-blurred-location
+* LBLD = `leaflet-blurred-location-display`
+* LBL = `leaflet-blurred-location`
 * remote markers = markers made from external API .
 * local markers = markers made from static data provided directly into LBLD API . 
 * precision = number of digits after decimal .
 * JSONparser = a function defined by User to parse external API .
-* zoom_level = the current zoom level of the map .
+* `zoom_level` = the current zoom level of the map .
 
 # Options 
 
@@ -52,33 +47,39 @@ Link to npm : https://www.npmjs.com/package/leaflet.blurred-location-display
 
 #### Define standard leaflet map object :
 
-     var map123 = L.map('map').setView([23,77] , 3) ; // There should be a div with id = 'map' .
+```js
+var map123 = L.map('map').setView([23,77] , 3) ; // There should be a div with id = 'map' .
+```
 
 #### Define the LBL object :
 
 See https://github.com/publiclab/leaflet-blurred-location for more details 
-     
-     var BlurredLocation = new BlurredLocation();
-     blurredLocation.addTo(map123) ;
-     
+
+```js
+var BlurredLocation = new BlurredLocation();
+blurredLocation.addTo(map123) ;
+```
+
 #### Define LBLD object : 
     
-     var blurredLocationDisplay = new BlurredLocationDisplay(options_display) ;
-     
+```js
+var blurredLocationDisplay = new BlurredLocationDisplay(options_display) ;
+```
+
 You need to pass some LBLD settings in the `options_display` object above , which are explained in the next section :
 
 #### Various fields in `options_display` : 
 
 ```js
- var options_display = {
-        blurredLocation: BlurredLocation,
-        locations: locations,
-        source_url: "https://publiclab.org/api/srch/nearbyPeople",
-        JSONparser: JSONparser,
-        zoom_filter: zoom_filter,
-        color_code_markers: false, // by default this is false .
-        style: 'both' // or 'heatmap' or 'markers' , by default is 'both'
- }
+var options_display = {
+  blurredLocation: BlurredLocation,
+  locations: locations,
+  source_url: "https://publiclab.org/api/srch/nearbyPeople",
+  JSONparser: JSONparser,
+  zoom_filter: zoom_filter,
+  color_code_markers: false, // by default this is false .
+  style: 'both' // or 'heatmap' or 'markers' , by default is 'both'
+}
 ```
 
 *    `blurredLocation` : This is compulsory field , you have to pass the LBL object here .
@@ -106,12 +107,13 @@ locations = [[23.1 ,      77.1],
 ```
 Now you can pass them to the `options_display` object as following : 
 
-```
+```js
 var options_display = {
   blurredLocation: BlurredLocation, // compulsory to pass
   locations: locations
 }
 ```
+
 ##### 2.) Using external API to fetch data :
 
 Pass the URL in the `source_url` field and a JSON parser function for your API (you can take a look at the default JSON parser below to make your own !) .
@@ -155,36 +157,37 @@ function JSONparser(data) {
 
 ```js
     // [lower zoom level , upper zoom level , >= precision allowed]
-      zoom_filter = [[0,4,0] , [5,7,2] , [8,11,4] , [12,18,5]] ;             
+      zoom_filter = [[0,4,0] , [5,7,2] , [8,11,4] , [12,18,5]];             
 ```
-The first number signifies the lower zoom level . 
+The first number signifies the lower zoom level. 
 
-The second number signifies the upper zoom level . 
+The second number signifies the upper zoom level. 
 
-The last number signifies that all markers having precision greater than equal to this number should be shown between lower zoom level and upper zoom level range .
+The last number signifies that all markers having precision greater than equal to this number should be shown between lower zoom level and upper zoom level range.
 
-The default zoom level filter array is : 
+The default zoom level filter array is: 
+
 ```js
 zoom_filter = [[0,4,0] , [5,7,2] , [8,11,4] , [12,18,5]] ;             
 ```
 
 #### Style parameter : 
 
-1.) style = `heatmap` shows only heatmap on map : 
+1.) style = `heatmap` shows only heatmap on map: 
 
 ![heatmap](https://user-images.githubusercontent.com/14952645/55791553-5e207080-5adc-11e9-89f8-5df6eaf63965.png)
 
-2.) style = `markers` shows only markers on map :
+2.) style = `markers` shows only markers on map:
 
 ![markers](https://user-images.githubusercontent.com/14952645/55819532-9ba1ef80-5b16-11e9-8f38-1276f5d4f046.png)
 
-3.) style = `both` shows both heatmap and markers on map :
+3.) style = `both` shows both heatmap and markers on map:
 
 ![both](https://publiclab.org/i/30983.png)
 
 #### Markers color coding parameter : 
 
-We can switch on the markers color coding feature which colors the markers according to the precision of its coordinates using `color_code_markers` parameter which is by default `false` .
+We can switch on the markers color coding feature which colors the markers according to the precision of its coordinates using `color_code_markers` parameter which is by default `false`.
 
 The following table is used for color coding : 
 
@@ -282,17 +285,17 @@ We wanted to give an easy visualization power , so we implemented this grid heat
 
 The default color of grid is : #F3F0C0
 
-If number of markers are in range [1,10] , the color is : #FFA500
+If number of markers are in range [1,10] , the color is : `#FFA500`
 
-If number of markers are in range [11,15] , the color is : #faff05
+If number of markers are in range [11,15] , the color is : `#faff05`
 
-If number of markers are in range [16,25] , the color is : #FF6347
+If number of markers are in range [16,25] , the color is : `#FF6347`
 
-If number of markers are in range [26,35] , the color is : #FF4500
+If number of markers are in range [26,35] , the color is : `#FF4500`
 
-If number of markers are in range [36,45] , the color is : #FF0000
+If number of markers are in range [36,45] , the color is : `#FF0000`
 
-If number of markers are greater than 45 , the color is :#8B0000
+If number of markers are greater than 45 , the color is : `#8B0000`
 
 NOTE : Clicking on each rectangle shows the pop-up showing number of markers in that rectangle .
 
