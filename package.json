@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "jquery": "^3.3.1",
-    "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#main"
+    "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#disableCenterMarker"
   }
 }

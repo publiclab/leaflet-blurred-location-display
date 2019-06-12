@@ -224,37 +224,38 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     return visibleLocations ;
   }
 
-  function activate_listeners(return_markers_array , fetchData)
-  {
-    map.on('zoomend' , function () {
-      let markers_array = return_markers_array() ;
+  function location_listener_helper(){
+      let markers_array = return_locations_markers_array() ;
       let m_array = markers_array ;
       markers_array = removeAllMarkers(markers_array) ;
       m_array.length = 0 ;
-      fetchData(true) ; 
+      fetchLocationData(true) ; 
       if(options.style === 'heatmap' || options.style === 'both'){
         ColorRectangles() ;
       }
-    }) ;
-
-    map.on('moveend' , function () {
-      let markers_array = return_markers_array() ;
-      let m_array = markers_array ;
-      markers_array = removeAllMarkers(markers_array) ;
-      m_array.length = 0 ;
-      fetchData(true) ; 
-      if(options.style === 'heatmap' || options.style === 'both'){
-        ColorRectangles() ;
-      }
-    }) ;
   }
 
+  function source_listener_helper(){
+      let markers_array = return_SourceUrl_markers_array() ;
+      let m_array = markers_array ;
+      markers_array = removeAllMarkers(markers_array) ;
+      m_array.length = 0 ;
+      fetchSourceUrlData(true) ; 
+      if(options.style === 'heatmap' || options.style === 'both'){
+        ColorRectangles() ;
+      }
+  }
+
+
   if(options.locations.length !== 0) {
-    activate_listeners(return_locations_markers_array , fetchLocationData) ; 
+    map.on("zoomend" , location_listener_helper) ;
+    map.on("moveend" , location_listener_helper) ;
+
   }
 
   if(options.source_url !== "") {
-     activate_listeners(return_SourceUrl_markers_array , fetchSourceUrlData) ; 
+    map.on("zoomend" , source_listener_helper) ;
+    map.on("moveend" , source_listener_helper) ;
   }
 
   let rectangle_options = {
@@ -263,7 +264,32 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     style: options.style
   }
   options.gridCenterRectangle = require('./ui/gridCenterRectangle.js') ;
-  let ColorRectangles = options.gridCenterRectangle(rectangle_options) ;
+  options.gridCenterRectangle = options.gridCenterRectangle(rectangle_options) ;
+  let ColorRectangles = options.gridCenterRectangle.ColorRectangles ;
+  let removeAllRectangles = options.gridCenterRectangle.removeAllRectangles ;
+
+  function removeLBLD()
+  {
+    //deactivate listeners
+    map.off("zoomend" , location_listener_helper) ;
+    map.off("moveend" , location_listener_helper) ;
+    map.off("zoomend" , source_listener_helper) ;
+    map.off("moveend" , source_listener_helper) ;
+    
+    // remove grid using LBL 
+    options.blurredLocation.setBlurred(false) ;
+   
+    //remove marker of LBL 
+    options.blurredLocation.disableCenterMarker() ;
+    // remove rectangles
+    removeAllRectangles() ;
+
+    //remove all markers
+    removeAllMarkers(return_locations_markers_array()) ;
+    removeAllMarkers(return_SourceUrl_markers_array()) ;
+
+    console.log("Success") ;
+  }
   
   function getMarkersOfPrecision(precision){
 
@@ -320,7 +346,8 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
     removeAllMarkers: removeAllMarkers,
     Interface: Interface,
     getMarkersOfPrecision: getMarkersOfPrecision, 
-    filterCoordinatesToPrecison: filterCoordinatesToPrecison
+    filterCoordinatesToPrecison: filterCoordinatesToPrecison,
+    removeLBLD: removeLBLD
   }
 }
 
@@ -369,17 +396,21 @@ module.exports = function changeRectangleColor(options){
     return color ; 
  }
 
+ function removeAllRectangles(){
+   if(typeof options.blurredLocation.getRectangle() !== "undefined"){
+    options.blurredLocation.getRectangle().remove() ; 
+   }
+   for(let i=0 ; i<rectangles.length ; i++){
+        rectangles[i].remove() ; 
+   }
+   rectangles.length = 0 ;
+   rectangles = [] ;
+ }
+
  function ColorRectangles()
   { 
      // console.log(options.return_all_markers_map()) ;
-      if(typeof options.blurredLocation.getRectangle() !== "undefined"){
-        options.blurredLocation.getRectangle().remove() ; 
-      }
-      for(let i=0 ; i<rectangles.length ; i++){
-        rectangles[i].remove() ; 
-      }
-      rectangles.length = 0 ;
-      rectangles = [] ;
+     removeAllRectangles() ;
     if(map.getZoom() >= 3 && map.getZoom() <=9){
       drawFullHeatMap() ;
     } 
@@ -484,7 +515,10 @@ module.exports = function changeRectangleColor(options){
 
   }
 
-  return ColorRectangles ;
+  return {
+    ColorRectangles: ColorRectangles,
+    removeAllRectangles: removeAllRectangles
+  }
 }
 },{}],6:[function(require,module,exports){
    L.Icon.BlackIcon = L.Icon.extend({
