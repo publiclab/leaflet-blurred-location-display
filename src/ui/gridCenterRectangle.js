@@ -29,17 +29,21 @@ module.exports = function changeRectangleColor(options){
     return color ; 
  }
 
+ function removeAllRectangles(){
+   if(typeof options.blurredLocation.getRectangle() !== "undefined"){
+    options.blurredLocation.getRectangle().remove() ; 
+   }
+   for(let i=0 ; i<rectangles.length ; i++){
+        rectangles[i].remove() ; 
+   }
+   rectangles.length = 0 ;
+   rectangles = [] ;
+ }
+
  function ColorRectangles()
   { 
      // console.log(options.return_all_markers_map()) ;
-      if(typeof options.blurredLocation.getRectangle() !== "undefined"){
-        options.blurredLocation.getRectangle().remove() ; 
-      }
-      for(let i=0 ; i<rectangles.length ; i++){
-        rectangles[i].remove() ; 
-      }
-      rectangles.length = 0 ;
-      rectangles = [] ;
+     removeAllRectangles() ;
     if(map.getZoom() >= 3 && map.getZoom() <=9){
       drawFullHeatMap() ;
     } 
@@ -144,5 +148,8 @@ module.exports = function changeRectangleColor(options){
 
   }
 
-  return ColorRectangles ;
+  return {
+    ColorRectangles: ColorRectangles,
+    removeAllRectangles: removeAllRectangles
+  }
 }
