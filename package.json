@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mridulnagpal/Leaflet.BlurredLocationDisplay.git"
+    "url": "git+https://github.com/publiclab/leaflet-blurred-location-display.git"
   },
   "author": "Sagarpreet Chadha",
   "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/mridulnagpal/Leaflet.BlurredLocationDisplay/issues"
+    "url": "https://github.com/publiclab/leaflet-blurred-location-display/issues"
   },
-  "homepage": "https://github.com/mridulnagpal/Leaflet.BlurredLocationDisplay#readme",
+  "homepage": "https://github.com/publiclab/leaflet-blurred-location-display/blob/main/README.md",
   "devDependencies": {
     "bootstrap": "^3.4.1",
     "grunt": "^1.0.4",
@@ -38,6 +38,6 @@
   },
   "dependencies": {
     "jquery": "^3.3.1",
-    "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#disableCenterMarker"
+    "leaflet-blurred-location": "git://github.com/publiclab/leaflet-blurred-location#main"
   }
 }
