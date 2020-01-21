@@ -1,17 +1,3 @@
-var window = new Object();
-var google = new Object();
-window.google = google;
-
-/*** Mock Google Maps JavaScript API ***/
-google = {
-  maps: {
-    Geocoder: function(stringObj, functionToDo) {
-      functionToDo = functionToDo || function() {};
-      functionToDo(response.results, "OK");
-    },
-  }
-};
-
 describe("Basic testing", function() {
 
   var geocoder;
