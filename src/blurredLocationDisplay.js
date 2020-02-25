@@ -129,7 +129,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
   function defaultPopupDisplay(obj) {
     var popup_content = "";
-    popup_content += "<h5><a href='" + options.host + obj.url + "'>" + obj.title + "</a></h5>";
+    popup_content += "<h5><a href='" + obj.url + "'>" + obj.title + "</a></h5>";
     return popup_content
   }
 

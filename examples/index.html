@@ -139,8 +139,8 @@
 
       function popupDisplay(obj) {
         var popup_content = "";
-        // if (image_url) popup_content += "<img src='" + options.host + image_url + "' class='popup-thumb' />";
-        popup_content += "<h5><a href='" + options.host + obj.url + "'>@" + obj.title + "</a></h5>";
+        // if (image_url) popup_content += "<img src='" + options.host + image_url + "' class='popup-thumb' />"; // not available in the api yet
+        popup_content += "<h5><a href='https://publiclab.org" + obj.url + "'>@" + obj.title + "</a></h5>";
         popup_content += "<div>Joined " + obj.created_at + "</div>";
         return popup_content
       }
