@@ -119,6 +119,8 @@
 
       var BlurredLocation = new BlurredLocation(options);
 
+      // These two functions are specific for use with the publiclab.org api
+
       function JSONparser(data)
       {
         parsed_data = [] ; 
@@ -130,7 +132,7 @@
             obj["latitude"] = parseFloat(data.items[i].latitude) ;
             obj["longitude"] = parseFloat(data.items[i].longitude) ;
             obj["title"] = data.items[i].doc_title ;
-            obj["created_at"] = TimeAgo.inWords("2019-09-16T19:23:51Z");
+            obj["created_at"] = TimeAgo.inWords("2019-09-16T19:23:51Z"); // will change to data.items[i].created_at when it is available
             parsed_data[parsed_data.length] = obj ;
           }
         }
@@ -165,7 +167,7 @@
 
       var options_display = {
         blurredLocation: BlurredLocation,
-        // locations: locations,
+        locations: locations,
         source_url: "https://publiclab.org/api/srch/nearbyPeople",
         JSONparser: JSONparser,
         popupDisplay: popupDisplay,
