@@ -182,7 +182,6 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                   var popup_content = options.popupDisplay(obj);
 
                   var popup = L.popup({
-                    maxWidth: 200,
                     className: 'lbld-popup'
                   }).setContent(popup_content);
                   m.addTo(map).bindPopup(popup) ;
