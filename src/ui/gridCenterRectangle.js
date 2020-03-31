@@ -55,7 +55,7 @@ module.exports = function changeRectangleColor(options){
   function calculateMarkersInsideRect(bounds)
   {
     let locations = options.return_all_markers_map() ;
-    let ctr = 0 ; 
+    let markers = [] ; 
 
     locations.forEach(function(value , key , map){
       if(typeof(value._latlng) != "undefined"){
@@ -63,12 +63,22 @@ module.exports = function changeRectangleColor(options){
        // console.log(latitude) ; 
         let longitude = value._latlng.lng ; 
         if(latitude >= bounds[0][0] && latitude <= bounds[1][0] && longitude >= bounds[0][1] && longitude <= bounds[1][1]){
-          ctr++ ;
+          markers.push(value) ;
         }
       }
     }) ;
         
-    return ctr ;
+    return markers ;
+  }
+
+  // generates an unordered list of marker links to fill a popup with
+  function generatePopupContentsFromMarkers(markers) {
+    let popupContents = "<ul>";
+    markers.forEach(function(marker) {
+      popupContents += "<li><a href='" + marker.url + "'>@" + marker.title + "</a></li>";
+    });
+    popupContents += "</ul>";
+    return popupContents;
   }
 
   // generated left row of rectangles starting from current_lng to left_lng !
@@ -82,10 +92,12 @@ module.exports = function changeRectangleColor(options){
       let lng2 = current_lng + diff ;
 
       let bounds = [[lat1,lng1], [lat2,lng2]] ;
-      let ctr = calculateMarkersInsideRect(bounds) ; 
+      let markers = calculateMarkersInsideRect(bounds) ; 
       let color = getColorCode(ctr) ;
 
-      let r = L.rectangle(bounds, {color: color , weight: 1}).bindPopup('Number of Markers : ' + ctr).addTo(map);
+      let r = L.rectangle(bounds, {color: color , weight: 1})
+        .bindPopup(generatePopupContentsFromMarkers(markers))
+        .addTo(map);
       rectangles[rectangles.length] = r ; 
       
       current_lng = current_lng - diff ; 
@@ -106,7 +118,9 @@ module.exports = function changeRectangleColor(options){
       let ctr = calculateMarkersInsideRect(bounds) ; 
       let color = getColorCode(ctr) ;
 
-      let r = L.rectangle(bounds, {color: color , weight: 1}).bindPopup('Number of Markers : ' + ctr).addTo(map);
+      let r = L.rectangle(bounds, {color: color , weight: 1})
+        .bindPopup(generatePopupContentsFromMarkers(markers))
+        .addTo(map);
       rectangles[rectangles.length] = r ; 
       
       current_lng = current_lng + diff ; 
