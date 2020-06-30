@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/publiclab/leaflet-blurred-location-display/blob/main/README.md",
   "devDependencies": {
-    "bootstrap": "^3.4.1",
+    "bootstrap": "^4.1.2",
     "grunt": "^1.0.4",
     "grunt-browserify": "^5.3.0",
     "grunt-contrib-concat": "^1.0.1",
