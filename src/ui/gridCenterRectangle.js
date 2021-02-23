@@ -103,8 +103,8 @@ module.exports = function changeRectangleColor(options){
       let markers = calculateMarkersInsideRect(bounds) ; 
       let color = getColorCode(markers.length) ;
       let r = L.rectangle(bounds, {color: color , weight: 1})
-        .bindPopup(generatePopupContentsFromMarkers(markers))
         .addTo(map);
+      if (markers.length > 0) r.bindPopup(generatePopupContentsFromMarkers(markers))
       rectangles[rectangles.length] = r ; 
       
       current_lng = current_lng - diff ; 
@@ -126,8 +126,8 @@ module.exports = function changeRectangleColor(options){
       let color = getColorCode(markers.length) ;
 
       let r = L.rectangle(bounds, {color: color , weight: 1})
-        .bindPopup(generatePopupContentsFromMarkers(markers))
         .addTo(map);
+      if (markers.length > 0) r.bindPopup(generatePopupContentsFromMarkers(markers))
       rectangles[rectangles.length] = r ; 
       
       current_lng = current_lng + diff ; 
