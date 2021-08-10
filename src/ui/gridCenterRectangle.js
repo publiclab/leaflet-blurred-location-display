@@ -75,7 +75,7 @@ module.exports = function changeRectangleColor(options){
   function generatePopupContentsFromMarkers(markers) {
     let popupContents = "<p><b>People within this region:</b></p>";
     popupContents += "<ul>";
-    if (marker[0].hasOwnProperty('url') && marker[0].hasOwnProperty('url')) {
+    if (markers[0].hasOwnProperty('url') && markers[0].hasOwnProperty('url')) {
       markers.forEach(function(marker) {
         if (marker.hasOwnProperty('url') && marker.hasOwnProperty('url')) {
           popupContents += "<li><a href='" + marker.url + "'>@" + marker.title + "</a></li>";
