@@ -75,7 +75,7 @@ module.exports = function changeRectangleColor(options){
   function generatePopupContentsFromMarkers(markers) {
     let popupContents = "<p><b>People within this region:</b></p>";
     popupContents += "<ul>";
-    if (marker[0].hasOwnProperty('url') && marker[0].hasOwnProperty('url')) {
+    if (markers[0].hasOwnProperty('url') && markers[0].hasOwnProperty('url')) {
       markers.forEach(function(marker) {
         if (marker.hasOwnProperty('url') && marker.hasOwnProperty('url')) {
           popupContents += "<li><a href='" + marker.url + "'>@" + marker.title + "</a></li>";
@@ -103,8 +103,8 @@ module.exports = function changeRectangleColor(options){
       let markers = calculateMarkersInsideRect(bounds) ; 
       let color = getColorCode(markers.length) ;
       let r = L.rectangle(bounds, {color: color , weight: 1})
-        .bindPopup(generatePopupContentsFromMarkers(markers))
         .addTo(map);
+      if (markers.length > 0) r.bindPopup(generatePopupContentsFromMarkers(markers))
       rectangles[rectangles.length] = r ; 
       
       current_lng = current_lng - diff ; 
@@ -126,8 +126,8 @@ module.exports = function changeRectangleColor(options){
       let color = getColorCode(markers.length) ;
 
       let r = L.rectangle(bounds, {color: color , weight: 1})
-        .bindPopup(generatePopupContentsFromMarkers(markers))
         .addTo(map);
+      if (markers.length > 0) r.bindPopup(generatePopupContentsFromMarkers(markers))
       rectangles[rectangles.length] = r ; 
       
       current_lng = current_lng + diff ; 
