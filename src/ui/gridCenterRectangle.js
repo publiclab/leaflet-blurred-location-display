@@ -59,8 +59,7 @@ module.exports = function changeRectangleColor(options){
 
     locations.forEach(function(value , key , map){
       if(typeof(value._latlng) != "undefined"){
-        let latitude = value._latlng.lat ; 
-       // console.log(latitude) ; 
+        let latitude = value._latlng.lat ;
         let longitude = value._latlng.lng ; 
         if(latitude >= bounds[0][0] && latitude <= bounds[1][0] && longitude >= bounds[0][1] && longitude <= bounds[1][1]){
           markers.push(value) ;
@@ -78,7 +77,7 @@ module.exports = function changeRectangleColor(options){
     if (markers[0].hasOwnProperty('url') && markers[0].hasOwnProperty('url')) {
       markers.forEach(function(marker) {
         if (marker.hasOwnProperty('url') && marker.hasOwnProperty('url')) {
-          popupContents += "<li><a href='" + marker.url + "'>@" + marker.title + "</a></li>";
+          popupContents += "<li><a href='https://publiclab.org" + marker.url + "'>@" + marker.title + "</a></li>";
         }
       });
     } else {
