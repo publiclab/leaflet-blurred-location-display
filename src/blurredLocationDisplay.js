@@ -165,6 +165,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 var m = L.marker([latitude, longitude], {
                   icon: icon_color
                 }) ;
+                //Need these additional fields to show information in popup 
                 m.title = title;
                 m.url = url;
                 SourceUrl_id_map.set(id , m) ;
