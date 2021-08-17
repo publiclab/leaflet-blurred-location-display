@@ -64,7 +64,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       return parsed_data ;   
   }
 
-  var all_markers_map = new Map() ; // passed to gridCenterRectangle --- contains all markers fetched till now !  
+  var all_markers_map = new Map() ; // passed to gridCenterRectangle --- contains all markers fetched till now ! 
   var locations_markers_array = [] ; 
   var SourceUrl_markers_array = [] ; // contains currently visible markers on map only !                            
   var SourceUrl_id_map = new Map() ; // separate hash map because 'ids' of locations_markers and SourceURL array may be same .
@@ -151,6 +151,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
               var id = obj["id"] ;
               var url = obj["url"] ;
+              var title = obj["title"] ;
               var latitude = obj["latitude"] ;
               var longitude = obj["longitude"] ;
             
@@ -164,6 +165,9 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 var m = L.marker([latitude, longitude], {
                   icon: icon_color
                 }) ;
+                //Need these additional fields to show information in popup 
+                m.title = title;
+                m.url = url;
                 SourceUrl_id_map.set(id , m) ;
                 all_markers_map.set(id , m) ;
                 if(options.style === 'markers' || options.style === 'both'){

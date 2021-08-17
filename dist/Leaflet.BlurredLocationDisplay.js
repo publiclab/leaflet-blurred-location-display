@@ -75,7 +75,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
       return parsed_data ;   
   }
 
-  var all_markers_map = new Map() ; // passed to gridCenterRectangle --- contains all markers fetched till now !  
+  var all_markers_map = new Map() ; // passed to gridCenterRectangle --- contains all markers fetched till now ! 
   var locations_markers_array = [] ; 
   var SourceUrl_markers_array = [] ; // contains currently visible markers on map only !                            
   var SourceUrl_id_map = new Map() ; // separate hash map because 'ids' of locations_markers and SourceURL array may be same .
@@ -162,6 +162,7 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
 
               var id = obj["id"] ;
               var url = obj["url"] ;
+              var title = obj["title"] ;
               var latitude = obj["latitude"] ;
               var longitude = obj["longitude"] ;
             
@@ -175,6 +176,8 @@ BlurredLocationDisplay = function BlurredLocationDisplay(options) {
                 var m = L.marker([latitude, longitude], {
                   icon: icon_color
                 }) ;
+                m.title = title;
+                m.url = url;
                 SourceUrl_id_map.set(id , m) ;
                 all_markers_map.set(id , m) ;
                 if(options.style === 'markers' || options.style === 'both'){
@@ -439,8 +442,7 @@ module.exports = function changeRectangleColor(options){
 
     locations.forEach(function(value , key , map){
       if(typeof(value._latlng) != "undefined"){
-        let latitude = value._latlng.lat ; 
-       // console.log(latitude) ; 
+        let latitude = value._latlng.lat ;
         let longitude = value._latlng.lng ; 
         if(latitude >= bounds[0][0] && latitude <= bounds[1][0] && longitude >= bounds[0][1] && longitude <= bounds[1][1]){
           markers.push(value) ;
@@ -458,7 +460,7 @@ module.exports = function changeRectangleColor(options){
     if (markers[0].hasOwnProperty('url') && markers[0].hasOwnProperty('url')) {
       markers.forEach(function(marker) {
         if (marker.hasOwnProperty('url') && marker.hasOwnProperty('url')) {
-          popupContents += "<li><a href='" + marker.url + "'>@" + marker.title + "</a></li>";
+          popupContents += "<li><a href='https://publiclab.org" + marker.url + "'>@" + marker.title + "</a></li>";
         }
       });
     } else {
